@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BBQ Outpost Schedule Publisher V2</title>
+  <title>BBQ Outpost Schedule Publisher V3</title>
   <style>
     :root{--bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f8fafc;--muted:#94a3b8;--line:#334155;--accent:#f97316;--ok:#22c55e;--danger:#ef4444;--blue:#38bdf8}
     *{box-sizing:border-box} body{margin:0;font-family:Arial,'Apple SD Gothic Neo',sans-serif;background:linear-gradient(120deg,#020617,#111827);color:var(--text)}
@@ -19,9 +19,9 @@
 <header>
   <div class="topbar">
     <div>
-      <h1>BBQ Outpost Schedule Publisher V2</h1>
-      <p>공통 비밀번호로 변환기를 열고, 직원 로그인 후 장소 저장/업로드 기록을 Firebase에 저장합니다.</p>
-      <span class="pill">공통 비밀번호</span><span class="pill">Firebase 로그인</span><span class="pill">Firestore 장소 저장</span><span class="pill">연도 포함 중복 체크</span><span class="pill">V3 Facebook 업로드 준비</span>
+      <h1>BBQ Outpost Schedule Publisher V3</h1>
+      <p>공통 비밀번호로 변환기를 열고, 직원 로그인 후 장소 저장/예약 업로드/업로드 기록을 Firebase에 저장합니다.</p>
+      <span class="pill">공통 비밀번호</span><span class="pill">Firebase 로그인</span><span class="pill">Firestore 장소 저장</span><span class="pill">연도 포함 중복 체크</span><span class="pill">예약 업로드</span><span class="pill">V4 Facebook 업로드 준비</span>
     </div>
     <div id="loginPanel" class="card loginBox">
       <h2>직원 로그인</h2>
@@ -48,7 +48,7 @@
   <div class="tabs row">
     <button onclick="showTab('publisher')">게시글 생성</button>
     <button onclick="showTab('admin')">장소 관리</button>
-    <button onclick="showTab('logs')">업로드 기록</button>
+    <button onclick="showTab('logs')">업로드/예약 기록</button>
     <button onclick="showTab('settings')">설정</button>
   </div>
 
@@ -86,12 +86,25 @@
     <div class="card">
       <h2>2. 게시글 미리보기</h2>
       <div id="output" class="preview"></div>
+      <h3>3. 업로드 방식</h3>
+      <label>업로드 방식</label>
+      <select id="publishMode" onchange="toggleScheduleBox()">
+        <option value="now">즉시 업로드</option>
+        <option value="scheduled">예약 업로드</option>
+      </select>
+      <div id="scheduleBox" class="hidden">
+        <label>예약 날짜</label>
+        <input id="scheduleDate" type="date" />
+        <label>예약 시간</label>
+        <input id="scheduleTime" type="time" value="10:00" />
+        <p class="small">한국 시간 기준으로 저장합니다. 실제 Facebook 예약 업로드는 Meta 연동 후 이 시간에 맞춰 처리됩니다.</p>
+      </div>
       <div class="row">
-        <button class="ok" onclick="recordUploadPlaceholder()">업로드 기록 저장</button>
+        <button class="ok" onclick="savePublishPlan()">업로드/예약 기록 저장</button>
         <button class="blue" onclick="facebookUploadPlaceholder()">Facebook 업로드</button>
       </div>
       <p id="status" class="small">아직 변환 전입니다.</p>
-      <div class="notice">V2에서는 실제 Facebook 게시 전 단계입니다. 로그인한 직원이 “업로드 기록 저장”을 누르면 Firestore에 기록되고, 같은 연도/날짜 중복을 확인합니다.</div>
+      <div class="notice">V3에서는 즉시 업로드/예약 업로드 기록을 Firestore에 저장합니다. 같은 연도/날짜에 이미 게시 또는 예약된 기록이 있으면 새 업로드를 막고 수정/취소 흐름으로 안내합니다.</div>
     </div>
   </section>
 
@@ -118,11 +131,11 @@
   </section>
 
   <section id="logs" class="card hidden">
-    <h2>업로드 기록</h2>
+    <h2>업로드/예약 기록</h2>
     <p>기록 기준은 화면 제목이 아니라 내부 날짜입니다. 예: 화면은 June 2nd, 내부 기록은 2026-06-02.</p>
     <button class="blue" onclick="loadUploadLogs()">기록 새로고침</button>
     <table class="table">
-      <thead><tr><th>내부 날짜</th><th>표시 날짜</th><th>직원</th><th>상태</th><th>시간</th></tr></thead>
+      <thead><tr><th>내부 날짜</th><th>표시 날짜</th><th>직원</th><th>상태</th><th>예약시간</th><th>생성시간</th><th>관리</th></tr></thead>
       <tbody id="logTable"></tbody>
     </table>
   </section>
@@ -195,7 +208,8 @@ window.showTab = function(id){['publisher','admin','logs','settings'].forEach(x=
 window.convertSchedule = function(){const raw=document.getElementById('raw').value;const s=extractSections(raw);const displayDate=parseDisplayDate(raw);const internalDate=parseInternalDate(raw);const result=`🔥 ${displayDate} schedule🔥\n\nLunch (11:00~)\n\n${formatList(s.lunch)}\n\nDinner (16:00~)\n\n${formatList(s.dinner)}\n\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys`;const out=document.getElementById('output');out.textContent=result;out.dataset.internalDate=internalDate;out.dataset.displayDate=displayDate;document.getElementById('status').textContent=`변환 완료: Lunch ${s.lunch.length}개, Dinner ${s.dinner.length}개, 사진 ${document.getElementById('photos').files.length}장 · 내부기록 ${internalDate}`;}
 window.copyPost = async function(){if(!document.getElementById('output').textContent.trim())convertSchedule();await navigator.clipboard.writeText(document.getElementById('output').textContent);document.getElementById('status').textContent='복사 완료. Facebook에 붙여넣을 수 있습니다.';}
 window.clearInput = function(){document.getElementById('raw').value='';document.getElementById('output').textContent='';document.getElementById('photos').value='';document.getElementById('photoPreview').innerHTML='';document.getElementById('status').textContent='초기화 완료';}
-window.facebookUploadPlaceholder = function(){document.getElementById('status').textContent='V3 기능입니다. Meta Business Suite / Graph API 연결 후 실제 업로드 버튼으로 바뀝니다.';}
+window.facebookUploadPlaceholder = function(){document.getElementById('status').textContent='V4 기능입니다. Meta Business Suite / Graph API 연결 후 실제 업로드/예약 업로드 버튼으로 바뀝니다.';}
+window.toggleScheduleBox = function(){const mode=document.getElementById('publishMode').value;document.getElementById('scheduleBox').classList.toggle('hidden', mode!=='scheduled');if(mode==='scheduled'&&!document.getElementById('scheduleDate').value){const internal=(document.getElementById('output').dataset.internalDate||parseInternalDate(document.getElementById('raw').value));document.getElementById('scheduleDate').value=internal;}}
 
 window.loginUser = async function(){
   const email=document.getElementById('loginEmail').value.trim();
@@ -214,24 +228,65 @@ window.renderPlaces = function(){const tbody=document.getElementById('placeTable
 window.syncPlacesFromCloud = async function(showMessage=true){try{const snap=await getDocs(collection(db,'places'));if(!snap.empty){snap.forEach(d=>{const data=d.data();if(data.alias&&data.place)places[data.alias]=data.place;});savePlacesLocal();renderPlaces();convertSchedule();if(showMessage) alert('Firebase 장소 목록을 불러왔습니다.');}else if(currentUser){for(const [alias,place] of Object.entries(places)){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});}if(showMessage) alert('기본 장소 목록을 Firebase에 처음 저장했습니다.');}}
 catch(e){console.warn(e);if(showMessage) alert('Firebase 장소 불러오기 실패: '+e.message);}}
 
-window.recordUploadPlaceholder = async function(){
-  if(!currentUser)return alert('업로드 기록 저장은 직원 로그인이 필요합니다.');
+window.savePublishPlan = async function(){
+  if(!currentUser)return alert('업로드/예약 기록 저장은 직원 로그인이 필요합니다.');
   if(!document.getElementById('output').textContent.trim())convertSchedule();
   const output=document.getElementById('output');
   const internalDate=output.dataset.internalDate || parseInternalDate(document.getElementById('raw').value);
   const displayDate=output.dataset.displayDate || parseDisplayDate(document.getElementById('raw').value);
+  const mode=document.getElementById('publishMode').value;
+  let scheduledAt='';
+  if(mode==='scheduled'){
+    const d=document.getElementById('scheduleDate').value;
+    const t=document.getElementById('scheduleTime').value;
+    if(!d||!t)return alert('예약 날짜와 시간을 입력하세요.');
+    scheduledAt=`${d}T${t}:00+09:00`;
+  }
   const ref=doc(db,'uploadLogs',internalDate);
   const existing=await getDoc(ref);
   if(existing.exists()){
     const data=existing.data();
-    document.getElementById('status').textContent=`중복 확인: ${displayDate}는 이미 기록이 있습니다. 업로드자: ${data.userEmail || '-'} / 내부기록 ${internalDate}`;
-    return;
+    if(!['cancelled','deleted','voided'].includes(data.status)){
+      const msg=data.status==='scheduled'?'이미 예약되어 있습니다.':'이미 게시/기록되어 있습니다.';
+      document.getElementById('status').textContent=`중복 확인: ${displayDate}는 ${msg} 업로드자: ${data.userEmail || '-'} / 내부기록 ${internalDate}. 기존 기록을 수정 또는 취소하세요.`;
+      return;
+    }
   }
-  await setDoc(ref,{internalDate,displayDate,userEmail:currentUser.email,status:'recorded_before_facebook_upload',photoCount:document.getElementById('photos').files.length,postText:output.textContent,createdAt:serverTimestamp()});
-  document.getElementById('status').textContent=`업로드 기록 저장 완료: ${internalDate}. V3에서 이 단계가 Facebook 실제 업로드 후 자동 저장으로 바뀝니다.`;
+  const status=mode==='scheduled'?'scheduled':'ready_to_publish';
+  await setDoc(ref,{internalDate,displayDate,userEmail:currentUser.email,status,scheduledAt,photoCount:document.getElementById('photos').files.length,postText:output.textContent,rawText:document.getElementById('raw').value,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  document.getElementById('status').textContent=mode==='scheduled'?`예약 저장 완료: ${displayDate} · ${scheduledAt}`:`즉시 업로드 대기 기록 저장 완료: ${internalDate}`;
   await loadUploadLogs();
 }
-window.loadUploadLogs = async function(){const tbody=document.getElementById('logTable');tbody.innerHTML='';try{const q=query(collection(db,'uploadLogs'),orderBy('internalDate','desc'),limit(60));const snap=await getDocs(q);snap.forEach(d=>{const data=d.data();const tr=document.createElement('tr');const created=data.createdAt&&data.createdAt.toDate?data.createdAt.toDate().toLocaleString('ko-KR'):'';tr.innerHTML=`<td>${escapeHtml(data.internalDate||d.id)}</td><td>${escapeHtml(data.displayDate||'')}</td><td>${escapeHtml(data.userEmail||'')}</td><td>${escapeHtml(data.status||'')}</td><td>${escapeHtml(created)}</td>`;tbody.appendChild(tr);});}catch(e){tbody.innerHTML=`<tr><td colspan="5">로그인이 필요하거나 권한이 없습니다: ${escapeHtml(e.message)}</td></tr>`;}}
+window.editPublishPlan = async function(internalDate){
+  const ref=doc(db,'uploadLogs',internalDate);
+  const snap=await getDoc(ref);
+  if(!snap.exists())return alert('기록을 찾을 수 없습니다.');
+  const data=snap.data();
+  document.getElementById('raw').value=data.rawText||document.getElementById('raw').value;
+  document.getElementById('output').textContent=data.postText||'';
+  document.getElementById('output').dataset.internalDate=data.internalDate||internalDate;
+  document.getElementById('output').dataset.displayDate=data.displayDate||'';
+  document.getElementById('publishMode').value=data.status==='scheduled'?'scheduled':'now';
+  toggleScheduleBox();
+  if(data.scheduledAt){
+    document.getElementById('scheduleDate').value=data.scheduledAt.slice(0,10);
+    document.getElementById('scheduleTime').value=data.scheduledAt.slice(11,16);
+  }
+  showTab('publisher');
+  document.getElementById('status').textContent='기존 기록을 불러왔습니다. 수정 후 다시 저장하세요.';
+}
+window.cancelPublishPlan = async function(internalDate){
+  if(!currentUser)return alert('로그인이 필요합니다.');
+  if(!confirm(`${internalDate} 기록을 취소 처리할까요?`))return;
+  const ref=doc(db,'uploadLogs',internalDate);
+  const snap=await getDoc(ref);
+  if(!snap.exists())return alert('기록을 찾을 수 없습니다.');
+  const data=snap.data();
+  await setDoc(ref,{...data,status:'cancelled',cancelledBy:currentUser.email,updatedAt:serverTimestamp()});
+  document.getElementById('status').textContent=`${internalDate} 기록을 취소했습니다. 이제 같은 날짜로 다시 저장할 수 있습니다.`;
+  await loadUploadLogs();
+}
+window.loadUploadLogs = async function(){const tbody=document.getElementById('logTable');tbody.innerHTML='';try{const q=query(collection(db,'uploadLogs'),orderBy('internalDate','desc'),limit(60));const snap=await getDocs(q);snap.forEach(d=>{const data=d.data();const tr=document.createElement('tr');const created=data.createdAt&&data.createdAt.toDate?data.createdAt.toDate().toLocaleString('ko-KR'):'';const sched=data.scheduledAt?new Date(data.scheduledAt).toLocaleString('ko-KR'):'';tr.innerHTML=`<td>${escapeHtml(data.internalDate||d.id)}</td><td>${escapeHtml(data.displayDate||'')}</td><td>${escapeHtml(data.userEmail||'')}</td><td>${escapeHtml(data.status||'')}</td><td>${escapeHtml(sched)}</td><td>${escapeHtml(created)}</td><td><button class="secondary" onclick="editPublishPlan('${escapeAttr(data.internalDate||d.id)}')">수정</button><button class="danger" onclick="cancelPublishPlan('${escapeAttr(data.internalDate||d.id)}')">취소</button></td>`;tbody.appendChild(tr);});}catch(e){tbody.innerHTML=`<tr><td colspan="7">로그인이 필요하거나 권한이 없습니다: ${escapeHtml(e.message)}</td></tr>`;}}
 window.changeAccessPassword = function(){const current=document.getElementById('currentAccessPassword').value.trim();const next=document.getElementById('newAccessPassword').value.trim();if(current!==getAccessPassword()){document.getElementById('settingsStatus').textContent='현재 비밀번호가 맞지 않습니다.';return;}if(next.length<4){document.getElementById('settingsStatus').textContent='새 비밀번호는 최소 4자 이상으로 해주세요.';return;}setAccessPassword(next);document.getElementById('settingsStatus').textContent='이 브라우저의 공통 비밀번호가 변경되었습니다.';document.getElementById('currentAccessPassword').value='';document.getElementById('newAccessPassword').value='';}
 
 document.getElementById('photos').addEventListener('change', e=>{const box=document.getElementById('photoPreview');box.innerHTML='';[...e.target.files].forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);box.appendChild(img);});convertSchedule();});
