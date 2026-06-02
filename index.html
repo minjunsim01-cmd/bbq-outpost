@@ -1,296 +1,202 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BBQ Outpost Schedule Publisher V3</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BBQ Outpost Publisher V4.1</title>
   <style>
-    :root{--bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f8fafc;--muted:#94a3b8;--line:#334155;--accent:#f97316;--ok:#22c55e;--danger:#ef4444;--blue:#38bdf8}
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,'Apple SD Gothic Neo',sans-serif;background:linear-gradient(120deg,#020617,#111827);color:var(--text)}
-    header,main{max-width:1180px;margin:auto;padding:22px} h1{margin:0 0 8px;font-size:28px} h2{margin:0 0 12px;font-size:20px} h3{margin:18px 0 8px;font-size:16px} p{color:var(--muted);line-height:1.55}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
-    label{display:block;margin:12px 0 7px;font-weight:700} textarea,input,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#020617;color:var(--text);padding:12px;font-size:15px} textarea{min-height:330px;resize:vertical;white-space:pre-wrap}
-    button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;margin:8px 8px 0 0}.primary{background:var(--accent);color:#111827}.secondary{background:#374151;color:var(--text)}.ok{background:var(--ok);color:#052e16}.danger{background:var(--danger);color:white}.blue{background:var(--blue);color:#082f49}
-    .preview{min-height:330px;white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;line-height:1.48}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.small{font-size:13px;color:var(--muted)}.hidden{display:none!important}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px;margin:3px}.photoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.photoGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;margin-top:10px}.table th,.table td{border-bottom:1px solid var(--line);padding:8px;text-align:left;font-size:14px}.tabs button{background:#1f2937;color:white}.notice{border-left:4px solid var(--accent);background:#0b1220;padding:10px;border-radius:12px;color:var(--muted)}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.loginBox{min-width:310px;max-width:410px}.badge{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--muted);font-size:13px;display:inline-block;margin-top:4px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}.photoGrid{grid-template-columns:repeat(2,1fr)}.topbar{display:block}.loginBox{max-width:none}}
+    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text)}.wrap{max-width:1120px;margin:0 auto;padding:22px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}.hidden{display:none!important}.tabs button{background:#1f2937}.tabs button.active{background:var(--accent)}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:220px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}.small{font-size:12px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.status{font-size:13px;color:#cbd5e1}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:95px;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}
   </style>
 </head>
 <body>
-<header>
+<div class="wrap">
   <div class="topbar">
     <div>
-      <h1>BBQ Outpost Schedule Publisher V3</h1>
-      <p>공통 비밀번호로 변환기를 열고, 직원 로그인 후 장소 저장/예약 업로드/업로드 기록을 Firebase에 저장합니다.</p>
-      <span class="pill">공통 비밀번호</span><span class="pill">Firebase 로그인</span><span class="pill">Firestore 장소 저장</span><span class="pill">연도 포함 중복 체크</span><span class="pill">예약 업로드</span><span class="pill">V4 Facebook 업로드 준비</span>
+      <h1>BBQ Outpost Publisher <span class="pill">V4.1</span></h1>
+      <div class="muted">스케줄 변환 · 사진 미리보기 · 예약 요청 · 직원 관리 · 감사 로그</div>
     </div>
-    <div id="loginPanel" class="card loginBox">
+    <div class="status" id="loginStatus">로그인 안 됨</div>
+  </div>
+
+  <section id="gate" class="card">
+    <h2>공통 비밀번호</h2>
+    <p class="muted">직원 전용 변환기 접속용 비밀번호입니다.</p>
+    <input id="gatePassword" type="password" placeholder="공통 비밀번호 입력" />
+    <button onclick="enterGate()">입장</button>
+    <p id="gateMsg" class="err"></p>
+  </section>
+
+  <main id="app" class="hidden">
+    <div class="card">
+      <div class="tabs">
+        <button class="active" onclick="showTab('publisher',this)">게시글 생성</button>
+        <button onclick="showTab('requests',this)">승인/예약</button>
+        <button id="tabLocations" onclick="showTab('locations',this)">장소 관리</button>
+        <button id="tabStaff" onclick="showTab('staff',this)">직원 관리</button>
+        <button id="tabSettings" onclick="showTab('settings',this)">설정</button>
+        <button onclick="showTab('logs',this)">감사 로그</button>
+      </div>
+    </div>
+
+    <section class="card">
       <h2>직원 로그인</h2>
-      <p class="small">Facebook 업로드와 기록 저장은 로그인 후 사용합니다.</p>
-      <label>이메일</label><input id="loginEmail" type="email" placeholder="예: admin@bbq.local" />
-      <label>비밀번호</label><input id="loginPassword" type="password" placeholder="Firebase에서 만든 비밀번호" onkeydown="if(event.key==='Enter') loginUser()" />
-      <button class="blue" onclick="loginUser()">로그인</button>
-      <button class="secondary" onclick="logoutUser()">로그아웃</button>
-      <div id="authStatus" class="badge">로그인 전</div>
-    </div>
-  </div>
-</header>
-
-<main id="lockScreen" class="card">
-  <h2>직원 전용 접속</h2>
-  <p>공통 비밀번호를 입력하면 변환기를 사용할 수 있습니다. 기본 비밀번호는 <b>bbq2026</b> 입니다.</p>
-  <label>공통 비밀번호</label>
-  <input id="accessPassword" type="password" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') unlockApp()" />
-  <button class="primary" onclick="unlockApp()">입장</button>
-  <p id="lockStatus" class="small"></p>
-</main>
-
-<main id="app" class="hidden">
-  <div class="tabs row">
-    <button onclick="showTab('publisher')">게시글 생성</button>
-    <button onclick="showTab('admin')">장소 관리</button>
-    <button onclick="showTab('logs')">업로드/예약 기록</button>
-    <button onclick="showTab('settings')">설정</button>
-  </div>
-
-  <section id="publisher" class="grid">
-    <div class="card">
-      <h2>1. 카톡 스케줄 입력</h2>
-      <label for="raw">카카오톡 원문</label>
-      <textarea id="raw">6/2 화(환율 - 1,480원🔴)
-
-점
-오산 4
-찰 2.5
-헤쿼 2
-71 2.5
-원스탑 3        6356
-75 2.5
-
-저
-좨 2
-63 2.5
-67 1.5
-68 1.5
-69 2</textarea>
-      <label for="photos">사진 선택</label>
-      <input id="photos" type="file" accept="image/*" multiple />
-      <div id="photoPreview" class="photoGrid"></div>
-      <div class="row">
-        <button class="primary" onclick="convertSchedule()">변환</button>
-        <button class="secondary" onclick="copyPost()">결과 복사</button>
-        <button class="danger" onclick="clearInput()">초기화</button>
+      <div class="grid3">
+        <input id="loginId" placeholder="아이디 예: manager1 또는 admin" />
+        <input id="loginPw" type="password" placeholder="비밀번호" />
+        <div>
+          <button onclick="loginLocal()">로그인</button>
+          <button class="secondary" onclick="logoutLocal()">로그아웃</button>
+        </div>
       </div>
-      <p class="small">오산, 환율, 수량, 차량번호는 자동 무시됩니다. 장소 약어는 장소 관리 메뉴에서 수정할 수 있습니다.</p>
-    </div>
+      <p class="muted">Firebase 연결 전에도 테스트할 수 있게 로컬 직원 관리로 동작합니다. 실제 운영 시 Firebase Auth/Firestore와 연결하면 됩니다.</p>
+    </section>
 
-    <div class="card">
-      <h2>2. 게시글 미리보기</h2>
-      <div id="output" class="preview"></div>
-      <h3>3. 업로드 방식</h3>
-      <label>업로드 방식</label>
-      <select id="publishMode" onchange="toggleScheduleBox()">
-        <option value="now">즉시 업로드</option>
-        <option value="scheduled">예약 업로드</option>
-      </select>
-      <div id="scheduleBox" class="hidden">
-        <label>예약 날짜</label>
-        <input id="scheduleDate" type="date" />
-        <label>예약 시간</label>
-        <input id="scheduleTime" type="time" value="10:00" />
-        <p class="small">한국 시간 기준으로 저장합니다. 실제 Facebook 예약 업로드는 Meta 연동 후 이 시간에 맞춰 처리됩니다.</p>
+    <section id="publisher" class="tab card">
+      <h2>게시글 생성</h2>
+      <div class="grid">
+        <div>
+          <h3>카톡 스케줄 붙여넣기</h3>
+          <textarea id="raw" placeholder="예:&#10;6/2 화(환율 - 1,480원🔴)&#10;&#10;점&#10;오산 4&#10;찰 2.5&#10;헤쿼 2&#10;71 2.5&#10;원스탑 3 6356&#10;75 2.5&#10;&#10;저&#10;좨 2&#10;63 2.5&#10;67 1.5&#10;68 1.5&#10;69 2"></textarea>
+          <div class="grid3">
+            <input id="scheduleYear" type="number" placeholder="년도" />
+            <select id="uploadMode"><option value="request">승인 요청</option><option value="draft">임시 저장</option></select>
+            <button onclick="generatePost()">변환</button>
+          </div>
+          <h3>예약 시간</h3>
+          <div class="grid">
+            <input id="reserveDate" type="date" />
+            <input id="reserveTime" type="time" value="10:00" />
+          </div>
+          <h3>사진 첨부</h3>
+          <input id="photos" type="file" accept="image/*" multiple onchange="previewPhotos()" />
+          <div id="photoPreview" class="photoRow"></div>
+        </div>
+        <div>
+          <h3>자동 검증</h3>
+          <div id="checks" class="card" style="margin:0"></div>
+          <h3>생성 결과</h3>
+          <div id="result" class="output"></div>
+          <button onclick="copyResult()">복사</button>
+          <button class="good" onclick="submitRequest()">승인 요청 저장</button>
+          <h3>Facebook 스타일 미리보기</h3>
+          <div class="preview">
+            <div class="muted">BBQ Outpost</div>
+            <div id="fbPhotos"></div>
+            <div id="fbText" style="white-space:pre-wrap"></div>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <button class="ok" onclick="savePublishPlan()">업로드/예약 기록 저장</button>
-        <button class="blue" onclick="facebookUploadPlaceholder()">Facebook 업로드</button>
+    </section>
+
+    <section id="requests" class="tab card hidden">
+      <h2>승인/예약 관리</h2>
+      <p class="muted">직원은 본인 요청만, 관리자는 전체 요청을 볼 수 있습니다.</p>
+      <div id="requestList"></div>
+    </section>
+
+    <section id="locations" class="tab card hidden">
+      <h2>장소 관리 <span class="pill">관리자 전용</span></h2>
+      <div class="grid3">
+        <input id="aliasInput" placeholder="약어/별칭 예: 슈행" />
+        <input id="fullInput" placeholder="정식 장소명 예: Super Hangar" />
+        <button onclick="saveLocation()">저장</button>
       </div>
-      <p id="status" class="small">아직 변환 전입니다.</p>
-      <div class="notice">V3에서는 즉시 업로드/예약 업로드 기록을 Firestore에 저장합니다. 같은 연도/날짜에 이미 게시 또는 예약된 기록이 있으면 새 업로드를 막고 수정/취소 흐름으로 안내합니다.</div>
-    </div>
-  </section>
+      <div id="locationTable"></div>
+    </section>
 
-  <section id="admin" class="card hidden">
-    <h2>장소 관리</h2>
-    <p>로그인한 직원만 장소를 Firebase에 저장할 수 있습니다. 로그인 전에는 현재 브라우저에만 저장됩니다.</p>
-    <div class="grid">
-      <div>
-        <label>약어 / 별칭</label>
-        <input id="aliasInput" placeholder="예: 슈행" />
+    <section id="staff" class="tab card hidden">
+      <h2>직원 관리 <span class="pill">관리자 전용</span></h2>
+      <div class="notice">직원 계정은 관리자가 직접 생성합니다. 아이디는 manager1~manager15 형식을 추천합니다.</div>
+      <div class="grid3" style="margin-top:12px">
+        <input id="newUserId" placeholder="아이디 예: manager4" />
+        <input id="newUserPw" type="password" placeholder="초기 비밀번호" />
+        <select id="newUserRole"><option value="staff">직원</option><option value="admin">관리자</option></select>
       </div>
-      <div>
-        <label>정식 장소명</label>
-        <input id="placeInput" placeholder="예: Superhangar" />
+      <button onclick="addUser()">직원 추가</button>
+      <div id="staffTable"></div>
+    </section>
+
+    <section id="settings" class="tab card hidden">
+      <h2>설정 <span class="pill">관리자 전용</span></h2>
+      <div class="grid">
+        <input id="newGatePw" type="password" placeholder="새 공통 비밀번호" />
+        <button onclick="changeGatePassword()">공통 비밀번호 변경</button>
       </div>
-    </div>
-    <button class="primary" onclick="savePlace()">저장/수정</button>
-    <button class="secondary" onclick="resetPlaces()">기본값 복원</button>
-    <button class="blue" onclick="syncPlacesFromCloud()">Firebase에서 다시 불러오기</button>
-    <table class="table">
-      <thead><tr><th>약어</th><th>정식 장소명</th><th>관리</th></tr></thead>
-      <tbody id="placeTable"></tbody>
-    </table>
-  </section>
+      <div class="dangerZone card">
+        <h3>운영 원칙</h3>
+        <p class="muted">공통 비밀번호 변경, 장소 관리, 직원 관리는 관리자만 가능합니다. 마지막 관리자 권한은 제거할 수 없습니다.</p>
+      </div>
+    </section>
 
-  <section id="logs" class="card hidden">
-    <h2>업로드/예약 기록</h2>
-    <p>기록 기준은 화면 제목이 아니라 내부 날짜입니다. 예: 화면은 June 2nd, 내부 기록은 2026-06-02.</p>
-    <button class="blue" onclick="loadUploadLogs()">기록 새로고침</button>
-    <table class="table">
-      <thead><tr><th>내부 날짜</th><th>표시 날짜</th><th>직원</th><th>상태</th><th>예약시간</th><th>생성시간</th><th>관리</th></tr></thead>
-      <tbody id="logTable"></tbody>
-    </table>
-  </section>
+    <section id="logs" class="tab card hidden">
+      <h2>감사 로그</h2>
+      <div id="logList"></div>
+    </section>
+  </main>
+</div>
 
-  <section id="settings" class="card hidden">
-    <h2>설정</h2>
-    <h3>공통 비밀번호 변경</h3>
-    <p>이 비밀번호는 현재 브라우저에 저장됩니다. 직원 전체 공통 변경은 다음 버전에서 Firebase 설정으로 연결합니다.</p>
-    <label>현재 비밀번호</label><input id="currentAccessPassword" type="password" />
-    <label>새 비밀번호</label><input id="newAccessPassword" type="password" />
-    <button class="primary" onclick="changeAccessPassword()">비밀번호 변경</button>
-    <p id="settingsStatus" class="small"></p>
-  </section>
-</main>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBxb_2auajjij5cHJGpI_W641jopQ05uxA",
-  authDomain: "bbq-outpost.firebaseapp.com",
-  projectId: "bbq-outpost",
-  storageBucket: "bbq-outpost.firebasestorage.app",
-  messagingSenderId: "967199098059",
-  appId: "1:967199098059:web:482dff12193966694d474e"
+<script>
+const LS = {
+  gate:'bbq_gate_password_v41', locations:'bbq_locations_v41', users:'bbq_users_v41', current:'bbq_current_user_v41', requests:'bbq_requests_v41', logs:'bbq_logs_v41'
 };
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const DEFAULT_PASSWORD = 'bbq2026';
-const PASSWORD_KEY = 'bbq_access_password_v2';
-const STORAGE_KEY = 'bbq_place_map_v2_cache';
-const defaultPlaces = {
-  '찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','USFK':'USFK parking lot','Usfk':'USFK parking lot','usfk':'USFK parking lot','원스탑':'Maude Hall Parking Lots'
+const defaultLocations = {
+  '찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','원스탑':'Maude Hall Parking Lots','USFK':'USFK parking lot','usfk':'USFK parking lot'
 };
-let places = loadPlaces();
-let currentUser = null;
-const ignoreWords = new Set(['오산']);
-const monthNames = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
-
-function getAccessPassword(){return localStorage.getItem(PASSWORD_KEY) || DEFAULT_PASSWORD;}
-function setAccessPassword(pw){localStorage.setItem(PASSWORD_KEY, pw);}
-function loadPlaces(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {...defaultPlaces};}catch(e){return {...defaultPlaces};}}
-function savePlacesLocal(){localStorage.setItem(STORAGE_KEY, JSON.stringify(places));}
-function ordinal(n){const v=n%100;if(v>=11&&v<=13)return n+'th';return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th');}
-function parseDisplayDate(raw){const m=raw.match(/(\d{1,2})\s*[\/.-]\s*(\d{1,2})/);if(!m)return 'June 2nd';return `${monthNames[Number(m[1])] || 'June'} ${ordinal(Number(m[2]))}`;}
-function parseInternalDate(raw){const m=raw.match(/(\d{1,2})\s*[\/.-]\s*(\d{1,2})/);const now=new Date();const year=now.getFullYear();const month=m?Number(m[1]):6;const day=m?Number(m[2]):2;return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;}
-function icon(i){return i%2===1?'🚚':'🚎';}
-function normalizeToken(line){return line.trim().split(/\s+/)[0].replace(/[,:;()\[\]]/g,'');}
-function extractSections(raw){const sections={lunch:[],dinner:[]};let mode=null;for(const originalLine of raw.split(/\r?\n/)){const line=originalLine.trim();if(!line)continue;if(line==='점'||/^점\b/.test(line)){mode='lunch';continue;}if(line==='저'||/^저\b/.test(line)){mode='dinner';continue;}if(!mode)continue;const token=normalizeToken(line);if(ignoreWords.has(token))continue;if(places[token])sections[mode].push(places[token]);}return sections;}
-function formatList(items){return items.map((name,idx)=>`${icon(idx+1)} ${idx+1} - ${name}`).join('\n');}
-function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function escapeAttr(s){return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
-
-window.unlockApp = async function(){
-  const pw = document.getElementById('accessPassword').value.trim();
-  if(pw === getAccessPassword()){
-    document.getElementById('lockScreen').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    renderPlaces();
-    convertSchedule();
-    await syncPlacesFromCloud(false);
-  } else document.getElementById('lockStatus').textContent='비밀번호가 맞지 않습니다.';
+function get(k, fallback){try{return JSON.parse(localStorage.getItem(k)) ?? fallback}catch(e){return fallback}}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function init(){
+  if(!localStorage.getItem(LS.gate)) set(LS.gate,'bbq2026');
+  if(!localStorage.getItem(LS.locations)) set(LS.locations,defaultLocations);
+  if(!localStorage.getItem(LS.users)) set(LS.users,[{id:'admin',pw:'admin1234',role:'admin',active:true},{id:'manager1',pw:'manager1234',role:'staff',active:true}]);
+  if(!localStorage.getItem(LS.requests)) set(LS.requests,[]);
+  if(!localStorage.getItem(LS.logs)) set(LS.logs,[]);
+  document.getElementById('scheduleYear').value = new Date().getFullYear();
+  const d=new Date(); document.getElementById('reserveDate').value = d.toISOString().slice(0,10);
+  const cur=get(LS.current,null); if(cur) updateLoginStatus();
 }
-window.showTab = function(id){['publisher','admin','logs','settings'].forEach(x=>document.getElementById(x).classList.toggle('hidden', id!==x)); if(id==='logs') loadUploadLogs();}
-window.convertSchedule = function(){const raw=document.getElementById('raw').value;const s=extractSections(raw);const displayDate=parseDisplayDate(raw);const internalDate=parseInternalDate(raw);const result=`🔥 ${displayDate} schedule🔥\n\nLunch (11:00~)\n\n${formatList(s.lunch)}\n\nDinner (16:00~)\n\n${formatList(s.dinner)}\n\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys`;const out=document.getElementById('output');out.textContent=result;out.dataset.internalDate=internalDate;out.dataset.displayDate=displayDate;document.getElementById('status').textContent=`변환 완료: Lunch ${s.lunch.length}개, Dinner ${s.dinner.length}개, 사진 ${document.getElementById('photos').files.length}장 · 내부기록 ${internalDate}`;}
-window.copyPost = async function(){if(!document.getElementById('output').textContent.trim())convertSchedule();await navigator.clipboard.writeText(document.getElementById('output').textContent);document.getElementById('status').textContent='복사 완료. Facebook에 붙여넣을 수 있습니다.';}
-window.clearInput = function(){document.getElementById('raw').value='';document.getElementById('output').textContent='';document.getElementById('photos').value='';document.getElementById('photoPreview').innerHTML='';document.getElementById('status').textContent='초기화 완료';}
-window.facebookUploadPlaceholder = function(){document.getElementById('status').textContent='V4 기능입니다. Meta Business Suite / Graph API 연결 후 실제 업로드/예약 업로드 버튼으로 바뀝니다.';}
-window.toggleScheduleBox = function(){const mode=document.getElementById('publishMode').value;document.getElementById('scheduleBox').classList.toggle('hidden', mode!=='scheduled');if(mode==='scheduled'&&!document.getElementById('scheduleDate').value){const internal=(document.getElementById('output').dataset.internalDate||parseInternalDate(document.getElementById('raw').value));document.getElementById('scheduleDate').value=internal;}}
-
-window.loginUser = async function(){
-  const email=document.getElementById('loginEmail').value.trim();
-  const password=document.getElementById('loginPassword').value;
-  try{await signInWithEmailAndPassword(auth,email,password);document.getElementById('loginPassword').value='';}
-  catch(e){document.getElementById('authStatus').textContent='로그인 실패: '+e.message;}
-}
-window.logoutUser = async function(){await signOut(auth);}
-onAuthStateChanged(auth, async user=>{currentUser=user;document.getElementById('authStatus').textContent=user?`로그인됨: ${user.email}`:'로그인 전';if(user){await syncPlacesFromCloud(false);await loadUploadLogs();}});
-
-window.savePlace = async function(){const alias=document.getElementById('aliasInput').value.trim();const place=document.getElementById('placeInput').value.trim();if(!alias||!place)return alert('약어와 정식 장소명을 모두 입력하세요.');places[alias]=place;savePlacesLocal();renderPlaces();document.getElementById('aliasInput').value='';document.getElementById('placeInput').value='';convertSchedule();if(currentUser){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});document.getElementById('status').textContent='장소가 Firebase에 저장되었습니다.';}else alert('로그인 전이라 현재 브라우저에만 저장되었습니다.');}
-window.deletePlace = async function(alias){if(confirm(`${alias} 항목을 삭제할까요?`)){delete places[alias];savePlacesLocal();renderPlaces();convertSchedule();if(currentUser) await deleteDoc(doc(db,'places',alias));}}
-window.editPlace = function(alias){document.getElementById('aliasInput').value=alias;document.getElementById('placeInput').value=places[alias];window.scrollTo({top:0,behavior:'smooth'});}
-window.resetPlaces = async function(){if(confirm('장소 목록을 기본값으로 복원할까요?')){places={...defaultPlaces};savePlacesLocal();renderPlaces();convertSchedule();if(currentUser){for(const [alias,place] of Object.entries(places)){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});}}}}
-window.renderPlaces = function(){const tbody=document.getElementById('placeTable');tbody.innerHTML='';Object.keys(places).sort((a,b)=>a.localeCompare(b,'ko')).forEach(alias=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${escapeHtml(alias)}</td><td>${escapeHtml(places[alias])}</td><td><button class="secondary" onclick="editPlace('${escapeAttr(alias)}')">수정</button><button class="danger" onclick="deletePlace('${escapeAttr(alias)}')">삭제</button></td>`;tbody.appendChild(tr);});}
-window.syncPlacesFromCloud = async function(showMessage=true){try{const snap=await getDocs(collection(db,'places'));if(!snap.empty){snap.forEach(d=>{const data=d.data();if(data.alias&&data.place)places[data.alias]=data.place;});savePlacesLocal();renderPlaces();convertSchedule();if(showMessage) alert('Firebase 장소 목록을 불러왔습니다.');}else if(currentUser){for(const [alias,place] of Object.entries(places)){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});}if(showMessage) alert('기본 장소 목록을 Firebase에 처음 저장했습니다.');}}
-catch(e){console.warn(e);if(showMessage) alert('Firebase 장소 불러오기 실패: '+e.message);}}
-
-window.savePublishPlan = async function(){
-  if(!currentUser)return alert('업로드/예약 기록 저장은 직원 로그인이 필요합니다.');
-  if(!document.getElementById('output').textContent.trim())convertSchedule();
-  const output=document.getElementById('output');
-  const internalDate=output.dataset.internalDate || parseInternalDate(document.getElementById('raw').value);
-  const displayDate=output.dataset.displayDate || parseDisplayDate(document.getElementById('raw').value);
-  const mode=document.getElementById('publishMode').value;
-  let scheduledAt='';
-  if(mode==='scheduled'){
-    const d=document.getElementById('scheduleDate').value;
-    const t=document.getElementById('scheduleTime').value;
-    if(!d||!t)return alert('예약 날짜와 시간을 입력하세요.');
-    scheduledAt=`${d}T${t}:00+09:00`;
-  }
-  const ref=doc(db,'uploadLogs',internalDate);
-  const existing=await getDoc(ref);
-  if(existing.exists()){
-    const data=existing.data();
-    if(!['cancelled','deleted','voided'].includes(data.status)){
-      const msg=data.status==='scheduled'?'이미 예약되어 있습니다.':'이미 게시/기록되어 있습니다.';
-      document.getElementById('status').textContent=`중복 확인: ${displayDate}는 ${msg} 업로드자: ${data.userEmail || '-'} / 내부기록 ${internalDate}. 기존 기록을 수정 또는 취소하세요.`;
-      return;
-    }
-  }
-  const status=mode==='scheduled'?'scheduled':'ready_to_publish';
-  await setDoc(ref,{internalDate,displayDate,userEmail:currentUser.email,status,scheduledAt,photoCount:document.getElementById('photos').files.length,postText:output.textContent,rawText:document.getElementById('raw').value,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
-  document.getElementById('status').textContent=mode==='scheduled'?`예약 저장 완료: ${displayDate} · ${scheduledAt}`:`즉시 업로드 대기 기록 저장 완료: ${internalDate}`;
-  await loadUploadLogs();
-}
-window.editPublishPlan = async function(internalDate){
-  const ref=doc(db,'uploadLogs',internalDate);
-  const snap=await getDoc(ref);
-  if(!snap.exists())return alert('기록을 찾을 수 없습니다.');
-  const data=snap.data();
-  document.getElementById('raw').value=data.rawText||document.getElementById('raw').value;
-  document.getElementById('output').textContent=data.postText||'';
-  document.getElementById('output').dataset.internalDate=data.internalDate||internalDate;
-  document.getElementById('output').dataset.displayDate=data.displayDate||'';
-  document.getElementById('publishMode').value=data.status==='scheduled'?'scheduled':'now';
-  toggleScheduleBox();
-  if(data.scheduledAt){
-    document.getElementById('scheduleDate').value=data.scheduledAt.slice(0,10);
-    document.getElementById('scheduleTime').value=data.scheduledAt.slice(11,16);
-  }
-  showTab('publisher');
-  document.getElementById('status').textContent='기존 기록을 불러왔습니다. 수정 후 다시 저장하세요.';
-}
-window.cancelPublishPlan = async function(internalDate){
-  if(!currentUser)return alert('로그인이 필요합니다.');
-  if(!confirm(`${internalDate} 기록을 취소 처리할까요?`))return;
-  const ref=doc(db,'uploadLogs',internalDate);
-  const snap=await getDoc(ref);
-  if(!snap.exists())return alert('기록을 찾을 수 없습니다.');
-  const data=snap.data();
-  await setDoc(ref,{...data,status:'cancelled',cancelledBy:currentUser.email,updatedAt:serverTimestamp()});
-  document.getElementById('status').textContent=`${internalDate} 기록을 취소했습니다. 이제 같은 날짜로 다시 저장할 수 있습니다.`;
-  await loadUploadLogs();
-}
-window.loadUploadLogs = async function(){const tbody=document.getElementById('logTable');tbody.innerHTML='';try{const q=query(collection(db,'uploadLogs'),orderBy('internalDate','desc'),limit(60));const snap=await getDocs(q);snap.forEach(d=>{const data=d.data();const tr=document.createElement('tr');const created=data.createdAt&&data.createdAt.toDate?data.createdAt.toDate().toLocaleString('ko-KR'):'';const sched=data.scheduledAt?new Date(data.scheduledAt).toLocaleString('ko-KR'):'';tr.innerHTML=`<td>${escapeHtml(data.internalDate||d.id)}</td><td>${escapeHtml(data.displayDate||'')}</td><td>${escapeHtml(data.userEmail||'')}</td><td>${escapeHtml(data.status||'')}</td><td>${escapeHtml(sched)}</td><td>${escapeHtml(created)}</td><td><button class="secondary" onclick="editPublishPlan('${escapeAttr(data.internalDate||d.id)}')">수정</button><button class="danger" onclick="cancelPublishPlan('${escapeAttr(data.internalDate||d.id)}')">취소</button></td>`;tbody.appendChild(tr);});}catch(e){tbody.innerHTML=`<tr><td colspan="7">로그인이 필요하거나 권한이 없습니다: ${escapeHtml(e.message)}</td></tr>`;}}
-window.changeAccessPassword = function(){const current=document.getElementById('currentAccessPassword').value.trim();const next=document.getElementById('newAccessPassword').value.trim();if(current!==getAccessPassword()){document.getElementById('settingsStatus').textContent='현재 비밀번호가 맞지 않습니다.';return;}if(next.length<4){document.getElementById('settingsStatus').textContent='새 비밀번호는 최소 4자 이상으로 해주세요.';return;}setAccessPassword(next);document.getElementById('settingsStatus').textContent='이 브라우저의 공통 비밀번호가 변경되었습니다.';document.getElementById('currentAccessPassword').value='';document.getElementById('newAccessPassword').value='';}
-
-document.getElementById('photos').addEventListener('change', e=>{const box=document.getElementById('photoPreview');box.innerHTML='';[...e.target.files].forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);box.appendChild(img);});convertSchedule();});
-renderPlaces();
+function log(action, detail){const logs=get(LS.logs,[]); const cur=get(LS.current,null); logs.unshift({time:new Date().toLocaleString('ko-KR'),user:cur?.id||'system',action,detail}); set(LS.logs,logs.slice(0,200)); renderLogs();}
+function enterGate(){const pw=document.getElementById('gatePassword').value.trim(); if(pw===get(LS.gate,'bbq2026')){document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden');renderAll();}else{document.getElementById('gateMsg').textContent='비밀번호가 맞지 않습니다.'}}
+function currentUser(){return get(LS.current,null)}
+function isAdmin(){return currentUser()?.role==='admin'}
+function loginLocal(){const id=document.getElementById('loginId').value.trim(); const pw=document.getElementById('loginPw').value; const u=get(LS.users,[]).find(x=>x.id===id&&x.pw===pw&&x.active); if(!u){alert('로그인 실패');return} set(LS.current,{id:u.id,role:u.role}); log('로그인',u.id); updateLoginStatus(); renderAll();}
+function logoutLocal(){log('로그아웃',currentUser()?.id||''); localStorage.removeItem(LS.current); updateLoginStatus(); renderAll();}
+function updateLoginStatus(){const u=currentUser(); document.getElementById('loginStatus').textContent=u?`${u.id} (${u.role==='admin'?'관리자':'직원'})`:'로그인 안 됨';}
+function requireAdmin(){if(!isAdmin()){alert('관리자만 가능합니다.');return false} return true}
+function showTab(id,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active')); if(btn)btn.classList.add('active'); renderAll();}
+const ord=n=>{if([11,12,13].includes(n%100))return n+'th'; return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th')};
+const months=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+function parseDate(raw){const m=raw.match(/(\d{1,2})\s*\/\s*(\d{1,2})/); if(!m)return null; const year=Number(document.getElementById('scheduleYear').value)||new Date().getFullYear(); return {year,month:Number(m[1]),day:Number(m[2]),key:`${year}-${String(m[1]).padStart(2,'0')}-${String(m[2]).padStart(2,'0')}`,title:`${months[Number(m[1])]} ${ord(Number(m[2]))}`};}
+function normalizeToken(line){return line.trim().split(/\s+/)[0];}
+function isIgnored(tok,line){if(!tok)return true; if(['점','저','Lunch','Dinner'].includes(tok))return true; if(tok.includes('환율'))return true; if(tok==='오산')return true; if(/^\d+(\.\d+)?$/.test(tok) && !get(LS.locations,{})[tok]) return true; if(/^\d{4}$/.test(tok) && !get(LS.locations,{})[tok]) return true; return false;}
+function generatePost(){const raw=document.getElementById('raw').value; const dt=parseDate(raw); const locs=get(LS.locations,{}); let section=null; const lunch=[], dinner=[], unknown=[]; raw.split(/\n/).forEach(line=>{const t=line.trim(); if(!t)return; if(t==='점'||t.startsWith('점 ')){section='lunch';return} if(t==='저'||t.startsWith('저 ')){section='dinner';return} const tok=normalizeToken(t); if(isIgnored(tok,t))return; const name=locs[tok]; if(name){(section==='dinner'?dinner:lunch).push(name)} else if(section){unknown.push(tok)} });
+ const build=(arr)=>arr.map((name,i)=>`${i%2===0?'🚚':'🚎'} ${i+1} - ${name}`).join('\n');
+ const title=dt?`🔥 ${dt.title} schedule🔥`:'🔥 schedule🔥'; const post=`${title}\n\nLunch (11:00~)\n\n${build(lunch)}\n\nDinner (16:00~)\n\n${build(dinner)}\n\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys`;
+ document.getElementById('result').textContent=post; document.getElementById('fbText').textContent=post; window.currentPost={post,dt,lunch,dinner,unknown}; renderChecks(); return window.currentPost;}
+function renderChecks(){const p=window.currentPost; const c=[]; if(!p){document.getElementById('checks').innerHTML='';return} c.push(p.dt?`<div class="ok">✓ 날짜 확인: ${p.dt.key}</div>`:`<div class="err">⚠ 날짜를 찾지 못했습니다.</div>`); c.push(p.lunch.length?`<div class="ok">✓ Lunch ${p.lunch.length}개</div>`:`<div class="err">⚠ Lunch 장소 없음</div>`); c.push(p.dinner.length?`<div class="ok">✓ Dinner ${p.dinner.length}개</div>`:`<div class="err">⚠ Dinner 장소 없음</div>`); const files=document.getElementById('photos').files.length; c.push(files?`<div class="ok">✓ 사진 ${files}장 첨부</div>`:`<div class="warnText">⚠ 사진이 없습니다.</div>`); if(p.unknown.length)c.push(`<div class="err">⚠ 미등록 장소: ${[...new Set(p.unknown)].join(', ')}</div>`); document.getElementById('checks').innerHTML=c.join('');}
+function copyResult(){navigator.clipboard.writeText(document.getElementById('result').textContent||''); alert('복사했습니다.');}
+function previewPhotos(){const files=[...document.getElementById('photos').files]; const row=document.getElementById('photoPreview'); const fb=document.getElementById('fbPhotos'); row.innerHTML=''; fb.innerHTML=''; files.forEach(f=>{const url=URL.createObjectURL(f); const img=document.createElement('img'); img.src=url; row.appendChild(img); const img2=document.createElement('img'); img2.src=url; fb.appendChild(img2);}); renderChecks();}
+function submitRequest(){if(!currentUser()){alert('직원 로그인이 필요합니다.');return} const p=generatePost(); if(!p.dt){alert('날짜를 찾을 수 없습니다.');return} const reqs=get(LS.requests,[]); const existing=reqs.find(r=>r.dateKey===p.dt.key && !['cancelled','rejected'].includes(r.status)); if(existing){alert(`이미 같은 날짜 요청/예약이 있습니다. 상태: ${existing.status}`);return} const reserveDate=document.getElementById('reserveDate').value; const reserveTime=document.getElementById('reserveTime').value; const item={id:'req_'+Date.now(),dateKey:p.dt.key,title:p.dt.title,post:p.post,author:currentUser().id,status:'pending',reserveAt:`${reserveDate} ${reserveTime}`,createdAt:new Date().toLocaleString('ko-KR'),approvedBy:null,rejectReason:''}; reqs.unshift(item); set(LS.requests,reqs); log('승인 요청',`${item.dateKey} / ${item.reserveAt}`); renderRequests(); alert('승인 요청이 저장되었습니다.');}
+function renderRequests(){const box=document.getElementById('requestList'); const u=currentUser(); const all=get(LS.requests,[]); const data=isAdmin()?all:all.filter(x=>x.author===u?.id); if(!data.length){box.innerHTML='<p class="muted">요청이 없습니다.</p>';return} box.innerHTML=data.map(r=>`<div class="card"><div><b>${r.title}</b> <span class="pill">${r.status}</span></div><div class="muted">날짜: ${r.dateKey} · 작성자: ${r.author} · 예약: ${r.reserveAt}</div><pre class="output" style="min-height:80px;max-height:180px;overflow:auto">${escapeHtml(r.post)}</pre>${isAdmin()?`<button class="good" onclick="approveReq('${r.id}')">승인</button><button class="bad" onclick="rejectReq('${r.id}')">반려</button><button class="warn" onclick="urgentReq('${r.id}')">긴급 게시</button><button class="secondary" onclick="cancelReq('${r.id}')">취소</button>`:''}</div>`).join('');}
+function updateReq(id,patch){const reqs=get(LS.requests,[]); const idx=reqs.findIndex(r=>r.id===id); if(idx<0)return; reqs[idx]={...reqs[idx],...patch}; set(LS.requests,reqs); renderRequests();}
+function approveReq(id){if(!requireAdmin())return; updateReq(id,{status:'scheduled',approvedBy:currentUser().id,approvedAt:new Date().toLocaleString('ko-KR')}); log('승인/예약 등록',id);}
+function rejectReq(id){if(!requireAdmin())return; const reason=prompt('반려 사유를 입력하세요')||''; updateReq(id,{status:'rejected',rejectReason:reason,approvedBy:currentUser().id}); log('반려',`${id} / ${reason}`);}
+function urgentReq(id){if(!requireAdmin())return; updateReq(id,{status:'published',approvedBy:currentUser().id,publishedAt:new Date().toLocaleString('ko-KR'),urgent:true}); log('긴급 게시 처리',id); alert('현재 버전은 기록만 저장합니다. 실제 Facebook 긴급 게시는 Meta 연동 후 작동합니다.');}
+function cancelReq(id){if(!requireAdmin())return; updateReq(id,{status:'cancelled'}); log('요청 취소',id);}
+function saveLocation(){if(!requireAdmin())return; const a=document.getElementById('aliasInput').value.trim(); const f=document.getElementById('fullInput').value.trim(); if(!a||!f)return alert('약어와 정식 장소명을 입력하세요.'); const loc=get(LS.locations,{}); loc[a]=f; set(LS.locations,loc); log('장소 저장',`${a} => ${f}`); renderLocations();}
+function deleteLocation(a){if(!requireAdmin())return; const loc=get(LS.locations,{}); delete loc[a]; set(LS.locations,loc); log('장소 삭제',a); renderLocations();}
+function renderLocations(){const loc=get(LS.locations,{}); document.getElementById('locationTable').innerHTML='<table><tr><th>약어</th><th>정식 장소명</th><th></th></tr>'+Object.keys(loc).sort().map(a=>`<tr><td>${escapeHtml(a)}</td><td>${escapeHtml(loc[a])}</td><td>${isAdmin()?`<button class="bad" onclick="deleteLocation('${escapeJs(a)}')">삭제</button>`:''}</td></tr>`).join('')+'</table>';}
+function addUser(){if(!requireAdmin())return; const id=document.getElementById('newUserId').value.trim(); const pw=document.getElementById('newUserPw').value; const role=document.getElementById('newUserRole').value; if(!/^manager\d+$|^admin\d*$|^admin$/.test(id)) return alert('아이디는 manager1 또는 admin 형식을 권장합니다.'); if(!pw)return alert('비밀번호를 입력하세요.'); const users=get(LS.users,[]); if(users.some(u=>u.id===id))return alert('이미 있는 아이디입니다.'); users.push({id,pw,role,active:true}); set(LS.users,users); log('직원 추가',`${id} (${role})`); renderStaff();}
+function adminCount(users){return users.filter(u=>u.role==='admin'&&u.active).length}
+function setRole(id,role){if(!requireAdmin())return; const users=get(LS.users,[]); const u=users.find(x=>x.id===id); if(!u)return; if(u.role==='admin'&&role==='staff'&&adminCount(users)<=1)return alert('최소 1명의 관리자는 유지되어야 합니다.'); u.role=role; set(LS.users,users); log('권한 변경',`${id} => ${role}`); renderStaff();}
+function resetPw(id){if(!requireAdmin())return; const pw=prompt('새 비밀번호를 입력하세요'); if(!pw)return; const users=get(LS.users,[]); const u=users.find(x=>x.id===id); if(u){u.pw=pw; set(LS.users,users); log('비밀번호 재설정',id); renderStaff();}}
+function deleteUser(id){if(!requireAdmin())return; const users=get(LS.users,[]); const u=users.find(x=>x.id===id); if(!u)return; if(u.role==='admin'&&adminCount(users)<=1)return alert('마지막 관리자는 삭제할 수 없습니다.'); if(!confirm(`${id} 삭제할까요?`))return; set(LS.users,users.filter(x=>x.id!==id)); log('직원 삭제',id); renderStaff();}
+function renderStaff(){const users=get(LS.users,[]); document.getElementById('staffTable').innerHTML='<table><tr><th>아이디</th><th>권한</th><th>관리</th></tr>'+users.map(u=>`<tr><td>${u.id}</td><td class="${u.role==='admin'?'role-admin':'role-staff'}">${u.role==='admin'?'관리자':'직원'}</td><td><button onclick="setRole('${u.id}','admin')">관리자 지정</button><button class="secondary" onclick="setRole('${u.id}','staff')">직원 변경</button><button class="warn" onclick="resetPw('${u.id}')">비밀번호 재설정</button><button class="bad" onclick="deleteUser('${u.id}')">삭제</button></td></tr>`).join('')+'</table>';}
+function changeGatePassword(){if(!requireAdmin())return; const pw=document.getElementById('newGatePw').value; if(!pw)return alert('새 비밀번호를 입력하세요.'); set(LS.gate,pw); log('공통 비밀번호 변경',''); alert('변경되었습니다.');}
+function renderLogs(){const logs=get(LS.logs,[]); document.getElementById('logList').innerHTML=logs.length?'<table><tr><th>시간</th><th>사용자</th><th>행동</th><th>내용</th></tr>'+logs.map(l=>`<tr><td>${l.time}</td><td>${l.user}</td><td>${l.action}</td><td>${escapeHtml(l.detail||'')}</td></tr>`).join('')+'</table>':'<p class="muted">로그가 없습니다.</p>';}
+function renderAll(){updateLoginStatus(); renderLocations(); renderStaff(); renderRequests(); renderLogs(); const admin=isAdmin(); ['tabLocations','tabStaff','tabSettings'].forEach(id=>{document.getElementById(id).style.display=admin?'inline-block':'none'});}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function escapeJs(s){return String(s).replace(/'/g,"\\'");}
+init();
 </script>
 </body>
 </html>
