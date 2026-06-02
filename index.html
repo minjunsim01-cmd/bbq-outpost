@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BBQ Outpost Publisher V4.5</title>
+  <title>BBQ Outpost Publisher V4.6</title>
   <style>
     :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text)}.wrap{max-width:1120px;margin:0 auto;padding:22px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}.hidden{display:none!important}.tabs button{background:#1f2937}.tabs button.active{background:var(--accent)}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:220px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}.small{font-size:12px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.status{font-size:13px;color:#cbd5e1}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:95px;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}
 
@@ -19,7 +19,7 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1>BBQ Outpost Publisher <span class="pill">V4.5</span></h1>
+      <h1>BBQ Outpost Publisher <span class="pill">V4.6</span></h1>
       <div class="muted">스케줄 변환 · 사진 미리보기 · 승인 요청 전 예약 날짜/시간 선택 · 직원 관리 · 감사 로그</div>
     </div>
     <div class="status" id="loginStatus">로그인 안 됨</div>
@@ -48,7 +48,7 @@
     <section class="card">
       <h2>직원 로그인</h2>
       <div class="grid3">
-        <input id="loginId" placeholder="아이디 예: manager1 또는 admin" />
+        <input id="loginId" placeholder="아이디 예: 김태민 / manager1 / admin" />
         <input id="loginPw" type="password" placeholder="비밀번호" />
         <div>
           <button onclick="loginLocal()">로그인</button>
@@ -129,9 +129,9 @@
 
     <section id="staff" class="tab card hidden">
       <h2>직원 관리 <span class="pill">관리자 전용</span></h2>
-      <div class="notice">직원 계정은 관리자가 직접 생성합니다. 아이디는 manager1~manager15 형식을 추천합니다.</div>
+      <div class="notice">직원 계정은 관리자가 직접 생성합니다. 아이디는 김태민 같은 한글 이름, manager1 같은 영문/숫자 조합 모두 가능합니다.</div>
       <div class="grid3" style="margin-top:12px">
-        <input id="newUserId" placeholder="아이디 예: manager4" />
+        <input id="newUserId" placeholder="아이디 예: 김태민" />
         <input id="newUserPw" type="password" placeholder="초기 비밀번호" />
         <select id="newUserRole"><option value="staff">직원</option><option value="admin">관리자</option></select>
       </div>
@@ -239,7 +239,7 @@ function cancelReq(id){if(!requireAdmin())return; updateReq(id,{status:'cancelle
 function saveLocation(){if(!requireAdmin())return; const a=document.getElementById('aliasInput').value.trim(); const f=document.getElementById('fullInput').value.trim(); if(!a||!f)return alert('약어와 정식 장소명을 입력하세요.'); const loc=get(LS.locations,{}); loc[a]=f; set(LS.locations,loc); log('장소 저장',`${a} => ${f}`); renderLocations();}
 function deleteLocation(a){if(!requireAdmin())return; const loc=get(LS.locations,{}); delete loc[a]; set(LS.locations,loc); log('장소 삭제',a); renderLocations();}
 function renderLocations(){const loc=get(LS.locations,{}); document.getElementById('locationTable').innerHTML='<table><tr><th>약어</th><th>정식 장소명</th><th></th></tr>'+Object.keys(loc).sort().map(a=>`<tr><td>${escapeHtml(a)}</td><td>${escapeHtml(loc[a])}</td><td>${isAdmin()?`<button class="bad" onclick="deleteLocation('${escapeJs(a)}')">삭제</button>`:''}</td></tr>`).join('')+'</table>';}
-function addUser(){if(!requireAdmin())return; const id=document.getElementById('newUserId').value.trim(); const pw=document.getElementById('newUserPw').value; const role=document.getElementById('newUserRole').value; if(!/^manager\d+$|^admin\d*$|^admin$/.test(id)) return alert('아이디는 manager1 또는 admin 형식을 권장합니다.'); if(!pw)return alert('비밀번호를 입력하세요.'); const users=get(LS.users,[]); if(users.some(u=>u.id===id))return alert('이미 있는 아이디입니다.'); users.push({id,pw,role,active:true}); set(LS.users,users); log('직원 추가',`${id} (${role})`); renderStaff();}
+function addUser(){if(!requireAdmin())return; const id=document.getElementById('newUserId').value.trim(); const pw=document.getElementById('newUserPw').value; const role=document.getElementById('newUserRole').value; if(!/^[가-힣a-zA-Z0-9_-]{2,20}$/.test(id)) return alert('아이디는 한글/영문/숫자/_/- 조합으로 2~20자까지 가능합니다. 예: 김태민, manager1'); if(!pw)return alert('비밀번호를 입력하세요.'); const users=get(LS.users,[]); if(users.some(u=>u.id===id))return alert('이미 있는 아이디입니다.'); users.push({id,pw,role,active:true}); set(LS.users,users); log('직원 추가',`${id} (${role})`); renderStaff();}
 function adminCount(users){return users.filter(u=>u.role==='admin'&&u.active).length}
 function setRole(id,role){if(!requireAdmin())return; const users=get(LS.users,[]); const u=users.find(x=>x.id===id); if(!u)return; if(u.role==='admin'&&role==='staff'&&adminCount(users)<=1)return alert('최소 1명의 관리자는 유지되어야 합니다.'); u.role=role; set(LS.users,users); log('권한 변경',`${id} => ${role}`); renderStaff();}
 function resetPw(id){if(!requireAdmin())return; const pw=prompt('새 비밀번호를 입력하세요'); if(!pw)return; const users=get(LS.users,[]); const u=users.find(x=>x.id===id); if(u){u.pw=pw; set(LS.users,users); log('비밀번호 재설정',id); renderStaff();}}
