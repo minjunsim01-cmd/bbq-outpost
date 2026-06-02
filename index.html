@@ -22,7 +22,7 @@
       <h1>BBQ Outpost Publisher <span class="pill">V4.6</span></h1>
       <div class="muted">스케줄 변환 · 사진 미리보기 · 승인 요청 전 예약 날짜/시간 선택 · 직원 관리 · 감사 로그</div>
     </div>
-    <div class="status" id="loginStatus">로그인 안 됨</div>
+    <div><div class="status" id="loginStatus">로그인 안 됨</div><div id="cloudStatus" class="muted small">Firebase 연결 준비 중</div></div>
   </div>
 
   <section id="gate" class="card">
@@ -55,7 +55,7 @@
           <button class="secondary" onclick="logoutLocal()">로그아웃</button>
         </div>
       </div>
-      <p class="muted">Firebase 연결 전에도 테스트할 수 있게 로컬 직원 관리로 동작합니다. 실제 운영 시 Firebase Auth/Firestore와 연결하면 됩니다.</p>
+      <p class="muted">현재 버전은 Firestore 공유 저장소와 연결됩니다. 직원 계정은 이 앱의 직원 관리에서 만들고, 모든 기기에서 공유됩니다.</p>
     </section>
 
     <section id="publisher" class="tab card">
@@ -158,7 +158,25 @@
   </main>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBxb_2auajjij5cHJGpI_W641jopQ05uxA",
+  authDomain: "bbq-outpost.firebaseapp.com",
+  projectId: "bbq-outpost",
+  storageBucket: "bbq-outpost.firebasestorage.app",
+  messagingSenderId: "967199098059",
+  appId: "1:967199098059:web:482dff12193966694d474e"
+};
+let db=null;
+let cloudReady=false;
+let cloudTimer=null;
+let cloudLoading=false;
+function setCloudStatus(text, ok=true){
+  const el=document.getElementById('cloudStatus');
+  if(el){ el.textContent=text; el.className=ok?'ok small':'err small'; }
+}
 const LS = {
   gate:'bbq_gate_password_v41', locations:'bbq_locations_v41', users:'bbq_users_v41', current:'bbq_current_user_v41', requests:'bbq_requests_v41', logs:'bbq_logs_v41'
 };
