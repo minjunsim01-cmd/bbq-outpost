@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BBQ Outpost Schedule Publisher V2</title>
+  <style>
+    :root{--bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f8fafc;--muted:#94a3b8;--line:#334155;--accent:#f97316;--ok:#22c55e;--danger:#ef4444;--blue:#38bdf8}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,'Apple SD Gothic Neo',sans-serif;background:linear-gradient(120deg,#020617,#111827);color:var(--text)}
+    header,main{max-width:1180px;margin:auto;padding:22px} h1{margin:0 0 8px;font-size:28px} h2{margin:0 0 12px;font-size:20px} h3{margin:18px 0 8px;font-size:16px} p{color:var(--muted);line-height:1.55}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+    label{display:block;margin:12px 0 7px;font-weight:700} textarea,input,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#020617;color:var(--text);padding:12px;font-size:15px} textarea{min-height:330px;resize:vertical;white-space:pre-wrap}
+    button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;margin:8px 8px 0 0}.primary{background:var(--accent);color:#111827}.secondary{background:#374151;color:var(--text)}.ok{background:var(--ok);color:#052e16}.danger{background:var(--danger);color:white}.blue{background:var(--blue);color:#082f49}
+    .preview{min-height:330px;white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;line-height:1.48}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.small{font-size:13px;color:var(--muted)}.hidden{display:none!important}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px;margin:3px}.photoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.photoGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--line);border-radius:12px}.table{width:100%;border-collapse:collapse;margin-top:10px}.table th,.table td{border-bottom:1px solid var(--line);padding:8px;text-align:left;font-size:14px}.tabs button{background:#1f2937;color:white}.notice{border-left:4px solid var(--accent);background:#0b1220;padding:10px;border-radius:12px;color:var(--muted)}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.loginBox{min-width:310px;max-width:410px}.badge{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--muted);font-size:13px;display:inline-block;margin-top:4px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.photoGrid{grid-template-columns:repeat(2,1fr)}.topbar{display:block}.loginBox{max-width:none}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <h1>BBQ Outpost Schedule Publisher V2</h1>
+      <p>공통 비밀번호로 변환기를 열고, 직원 로그인 후 장소 저장/업로드 기록을 Firebase에 저장합니다.</p>
+      <span class="pill">공통 비밀번호</span><span class="pill">Firebase 로그인</span><span class="pill">Firestore 장소 저장</span><span class="pill">연도 포함 중복 체크</span><span class="pill">V3 Facebook 업로드 준비</span>
+    </div>
+    <div id="loginPanel" class="card loginBox">
+      <h2>직원 로그인</h2>
+      <p class="small">Facebook 업로드와 기록 저장은 로그인 후 사용합니다.</p>
+      <label>이메일</label><input id="loginEmail" type="email" placeholder="예: admin@bbq.local" />
+      <label>비밀번호</label><input id="loginPassword" type="password" placeholder="Firebase에서 만든 비밀번호" onkeydown="if(event.key==='Enter') loginUser()" />
+      <button class="blue" onclick="loginUser()">로그인</button>
+      <button class="secondary" onclick="logoutUser()">로그아웃</button>
+      <div id="authStatus" class="badge">로그인 전</div>
+    </div>
+  </div>
+</header>
+
+<main id="lockScreen" class="card">
+  <h2>직원 전용 접속</h2>
+  <p>공통 비밀번호를 입력하면 변환기를 사용할 수 있습니다. 기본 비밀번호는 <b>bbq2026</b> 입니다.</p>
+  <label>공통 비밀번호</label>
+  <input id="accessPassword" type="password" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') unlockApp()" />
+  <button class="primary" onclick="unlockApp()">입장</button>
+  <p id="lockStatus" class="small"></p>
+</main>
+
+<main id="app" class="hidden">
+  <div class="tabs row">
+    <button onclick="showTab('publisher')">게시글 생성</button>
+    <button onclick="showTab('admin')">장소 관리</button>
+    <button onclick="showTab('logs')">업로드 기록</button>
+    <button onclick="showTab('settings')">설정</button>
+  </div>
+
+  <section id="publisher" class="grid">
+    <div class="card">
+      <h2>1. 카톡 스케줄 입력</h2>
+      <label for="raw">카카오톡 원문</label>
+      <textarea id="raw">6/2 화(환율 - 1,480원🔴)
+
+점
+오산 4
+찰 2.5
+헤쿼 2
+71 2.5
+원스탑 3        6356
+75 2.5
+
+저
+좨 2
+63 2.5
+67 1.5
+68 1.5
+69 2</textarea>
+      <label for="photos">사진 선택</label>
+      <input id="photos" type="file" accept="image/*" multiple />
+      <div id="photoPreview" class="photoGrid"></div>
+      <div class="row">
+        <button class="primary" onclick="convertSchedule()">변환</button>
+        <button class="secondary" onclick="copyPost()">결과 복사</button>
+        <button class="danger" onclick="clearInput()">초기화</button>
+      </div>
+      <p class="small">오산, 환율, 수량, 차량번호는 자동 무시됩니다. 장소 약어는 장소 관리 메뉴에서 수정할 수 있습니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. 게시글 미리보기</h2>
+      <div id="output" class="preview"></div>
+      <div class="row">
+        <button class="ok" onclick="recordUploadPlaceholder()">업로드 기록 저장</button>
+        <button class="blue" onclick="facebookUploadPlaceholder()">Facebook 업로드</button>
+      </div>
+      <p id="status" class="small">아직 변환 전입니다.</p>
+      <div class="notice">V2에서는 실제 Facebook 게시 전 단계입니다. 로그인한 직원이 “업로드 기록 저장”을 누르면 Firestore에 기록되고, 같은 연도/날짜 중복을 확인합니다.</div>
+    </div>
+  </section>
+
+  <section id="admin" class="card hidden">
+    <h2>장소 관리</h2>
+    <p>로그인한 직원만 장소를 Firebase에 저장할 수 있습니다. 로그인 전에는 현재 브라우저에만 저장됩니다.</p>
+    <div class="grid">
+      <div>
+        <label>약어 / 별칭</label>
+        <input id="aliasInput" placeholder="예: 슈행" />
+      </div>
+      <div>
+        <label>정식 장소명</label>
+        <input id="placeInput" placeholder="예: Superhangar" />
+      </div>
+    </div>
+    <button class="primary" onclick="savePlace()">저장/수정</button>
+    <button class="secondary" onclick="resetPlaces()">기본값 복원</button>
+    <button class="blue" onclick="syncPlacesFromCloud()">Firebase에서 다시 불러오기</button>
+    <table class="table">
+      <thead><tr><th>약어</th><th>정식 장소명</th><th>관리</th></tr></thead>
+      <tbody id="placeTable"></tbody>
+    </table>
+  </section>
+
+  <section id="logs" class="card hidden">
+    <h2>업로드 기록</h2>
+    <p>기록 기준은 화면 제목이 아니라 내부 날짜입니다. 예: 화면은 June 2nd, 내부 기록은 2026-06-02.</p>
+    <button class="blue" onclick="loadUploadLogs()">기록 새로고침</button>
+    <table class="table">
+      <thead><tr><th>내부 날짜</th><th>표시 날짜</th><th>직원</th><th>상태</th><th>시간</th></tr></thead>
+      <tbody id="logTable"></tbody>
+    </table>
+  </section>
+
+  <section id="settings" class="card hidden">
+    <h2>설정</h2>
+    <h3>공통 비밀번호 변경</h3>
+    <p>이 비밀번호는 현재 브라우저에 저장됩니다. 직원 전체 공통 변경은 다음 버전에서 Firebase 설정으로 연결합니다.</p>
+    <label>현재 비밀번호</label><input id="currentAccessPassword" type="password" />
+    <label>새 비밀번호</label><input id="newAccessPassword" type="password" />
+    <button class="primary" onclick="changeAccessPassword()">비밀번호 변경</button>
+    <p id="settingsStatus" class="small"></p>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxb_2auajjij5cHJGpI_W641jopQ05uxA",
+  authDomain: "bbq-outpost.firebaseapp.com",
+  projectId: "bbq-outpost",
+  storageBucket: "bbq-outpost.firebasestorage.app",
+  messagingSenderId: "967199098059",
+  appId: "1:967199098059:web:482dff12193966694d474e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const DEFAULT_PASSWORD = 'bbq2026';
+const PASSWORD_KEY = 'bbq_access_password_v2';
+const STORAGE_KEY = 'bbq_place_map_v2_cache';
+const defaultPlaces = {
+  '찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','USFK':'USFK parking lot','Usfk':'USFK parking lot','usfk':'USFK parking lot','원스탑':'Maude Hall Parking Lots'
+};
+let places = loadPlaces();
+let currentUser = null;
+const ignoreWords = new Set(['오산']);
+const monthNames = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function getAccessPassword(){return localStorage.getItem(PASSWORD_KEY) || DEFAULT_PASSWORD;}
+function setAccessPassword(pw){localStorage.setItem(PASSWORD_KEY, pw);}
+function loadPlaces(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {...defaultPlaces};}catch(e){return {...defaultPlaces};}}
+function savePlacesLocal(){localStorage.setItem(STORAGE_KEY, JSON.stringify(places));}
+function ordinal(n){const v=n%100;if(v>=11&&v<=13)return n+'th';return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th');}
+function parseDisplayDate(raw){const m=raw.match(/(\d{1,2})\s*[\/.-]\s*(\d{1,2})/);if(!m)return 'June 2nd';return `${monthNames[Number(m[1])] || 'June'} ${ordinal(Number(m[2]))}`;}
+function parseInternalDate(raw){const m=raw.match(/(\d{1,2})\s*[\/.-]\s*(\d{1,2})/);const now=new Date();const year=now.getFullYear();const month=m?Number(m[1]):6;const day=m?Number(m[2]):2;return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;}
+function icon(i){return i%2===1?'🚚':'🚎';}
+function normalizeToken(line){return line.trim().split(/\s+/)[0].replace(/[,:;()\[\]]/g,'');}
+function extractSections(raw){const sections={lunch:[],dinner:[]};let mode=null;for(const originalLine of raw.split(/\r?\n/)){const line=originalLine.trim();if(!line)continue;if(line==='점'||/^점\b/.test(line)){mode='lunch';continue;}if(line==='저'||/^저\b/.test(line)){mode='dinner';continue;}if(!mode)continue;const token=normalizeToken(line);if(ignoreWords.has(token))continue;if(places[token])sections[mode].push(places[token]);}return sections;}
+function formatList(items){return items.map((name,idx)=>`${icon(idx+1)} ${idx+1} - ${name}`).join('\n');}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function escapeAttr(s){return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+
+window.unlockApp = async function(){
+  const pw = document.getElementById('accessPassword').value.trim();
+  if(pw === getAccessPassword()){
+    document.getElementById('lockScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    renderPlaces();
+    convertSchedule();
+    await syncPlacesFromCloud(false);
+  } else document.getElementById('lockStatus').textContent='비밀번호가 맞지 않습니다.';
+}
+window.showTab = function(id){['publisher','admin','logs','settings'].forEach(x=>document.getElementById(x).classList.toggle('hidden', id!==x)); if(id==='logs') loadUploadLogs();}
+window.convertSchedule = function(){const raw=document.getElementById('raw').value;const s=extractSections(raw);const displayDate=parseDisplayDate(raw);const internalDate=parseInternalDate(raw);const result=`🔥 ${displayDate} schedule🔥\n\nLunch (11:00~)\n\n${formatList(s.lunch)}\n\nDinner (16:00~)\n\n${formatList(s.dinner)}\n\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys`;const out=document.getElementById('output');out.textContent=result;out.dataset.internalDate=internalDate;out.dataset.displayDate=displayDate;document.getElementById('status').textContent=`변환 완료: Lunch ${s.lunch.length}개, Dinner ${s.dinner.length}개, 사진 ${document.getElementById('photos').files.length}장 · 내부기록 ${internalDate}`;}
+window.copyPost = async function(){if(!document.getElementById('output').textContent.trim())convertSchedule();await navigator.clipboard.writeText(document.getElementById('output').textContent);document.getElementById('status').textContent='복사 완료. Facebook에 붙여넣을 수 있습니다.';}
+window.clearInput = function(){document.getElementById('raw').value='';document.getElementById('output').textContent='';document.getElementById('photos').value='';document.getElementById('photoPreview').innerHTML='';document.getElementById('status').textContent='초기화 완료';}
+window.facebookUploadPlaceholder = function(){document.getElementById('status').textContent='V3 기능입니다. Meta Business Suite / Graph API 연결 후 실제 업로드 버튼으로 바뀝니다.';}
+
+window.loginUser = async function(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  try{await signInWithEmailAndPassword(auth,email,password);document.getElementById('loginPassword').value='';}
+  catch(e){document.getElementById('authStatus').textContent='로그인 실패: '+e.message;}
+}
+window.logoutUser = async function(){await signOut(auth);}
+onAuthStateChanged(auth, async user=>{currentUser=user;document.getElementById('authStatus').textContent=user?`로그인됨: ${user.email}`:'로그인 전';if(user){await syncPlacesFromCloud(false);await loadUploadLogs();}});
+
+window.savePlace = async function(){const alias=document.getElementById('aliasInput').value.trim();const place=document.getElementById('placeInput').value.trim();if(!alias||!place)return alert('약어와 정식 장소명을 모두 입력하세요.');places[alias]=place;savePlacesLocal();renderPlaces();document.getElementById('aliasInput').value='';document.getElementById('placeInput').value='';convertSchedule();if(currentUser){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});document.getElementById('status').textContent='장소가 Firebase에 저장되었습니다.';}else alert('로그인 전이라 현재 브라우저에만 저장되었습니다.');}
+window.deletePlace = async function(alias){if(confirm(`${alias} 항목을 삭제할까요?`)){delete places[alias];savePlacesLocal();renderPlaces();convertSchedule();if(currentUser) await deleteDoc(doc(db,'places',alias));}}
+window.editPlace = function(alias){document.getElementById('aliasInput').value=alias;document.getElementById('placeInput').value=places[alias];window.scrollTo({top:0,behavior:'smooth'});}
+window.resetPlaces = async function(){if(confirm('장소 목록을 기본값으로 복원할까요?')){places={...defaultPlaces};savePlacesLocal();renderPlaces();convertSchedule();if(currentUser){for(const [alias,place] of Object.entries(places)){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});}}}}
+window.renderPlaces = function(){const tbody=document.getElementById('placeTable');tbody.innerHTML='';Object.keys(places).sort((a,b)=>a.localeCompare(b,'ko')).forEach(alias=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${escapeHtml(alias)}</td><td>${escapeHtml(places[alias])}</td><td><button class="secondary" onclick="editPlace('${escapeAttr(alias)}')">수정</button><button class="danger" onclick="deletePlace('${escapeAttr(alias)}')">삭제</button></td>`;tbody.appendChild(tr);});}
+window.syncPlacesFromCloud = async function(showMessage=true){try{const snap=await getDocs(collection(db,'places'));if(!snap.empty){snap.forEach(d=>{const data=d.data();if(data.alias&&data.place)places[data.alias]=data.place;});savePlacesLocal();renderPlaces();convertSchedule();if(showMessage) alert('Firebase 장소 목록을 불러왔습니다.');}else if(currentUser){for(const [alias,place] of Object.entries(places)){await setDoc(doc(db,'places',alias),{alias,place,updatedAt:serverTimestamp(),updatedBy:currentUser.email});}if(showMessage) alert('기본 장소 목록을 Firebase에 처음 저장했습니다.');}}
+catch(e){console.warn(e);if(showMessage) alert('Firebase 장소 불러오기 실패: '+e.message);}}
+
+window.recordUploadPlaceholder = async function(){
+  if(!currentUser)return alert('업로드 기록 저장은 직원 로그인이 필요합니다.');
+  if(!document.getElementById('output').textContent.trim())convertSchedule();
+  const output=document.getElementById('output');
+  const internalDate=output.dataset.internalDate || parseInternalDate(document.getElementById('raw').value);
+  const displayDate=output.dataset.displayDate || parseDisplayDate(document.getElementById('raw').value);
+  const ref=doc(db,'uploadLogs',internalDate);
+  const existing=await getDoc(ref);
+  if(existing.exists()){
+    const data=existing.data();
+    document.getElementById('status').textContent=`중복 확인: ${displayDate}는 이미 기록이 있습니다. 업로드자: ${data.userEmail || '-'} / 내부기록 ${internalDate}`;
+    return;
+  }
+  await setDoc(ref,{internalDate,displayDate,userEmail:currentUser.email,status:'recorded_before_facebook_upload',photoCount:document.getElementById('photos').files.length,postText:output.textContent,createdAt:serverTimestamp()});
+  document.getElementById('status').textContent=`업로드 기록 저장 완료: ${internalDate}. V3에서 이 단계가 Facebook 실제 업로드 후 자동 저장으로 바뀝니다.`;
+  await loadUploadLogs();
+}
+window.loadUploadLogs = async function(){const tbody=document.getElementById('logTable');tbody.innerHTML='';try{const q=query(collection(db,'uploadLogs'),orderBy('internalDate','desc'),limit(60));const snap=await getDocs(q);snap.forEach(d=>{const data=d.data();const tr=document.createElement('tr');const created=data.createdAt&&data.createdAt.toDate?data.createdAt.toDate().toLocaleString('ko-KR'):'';tr.innerHTML=`<td>${escapeHtml(data.internalDate||d.id)}</td><td>${escapeHtml(data.displayDate||'')}</td><td>${escapeHtml(data.userEmail||'')}</td><td>${escapeHtml(data.status||'')}</td><td>${escapeHtml(created)}</td>`;tbody.appendChild(tr);});}catch(e){tbody.innerHTML=`<tr><td colspan="5">로그인이 필요하거나 권한이 없습니다: ${escapeHtml(e.message)}</td></tr>`;}}
+window.changeAccessPassword = function(){const current=document.getElementById('currentAccessPassword').value.trim();const next=document.getElementById('newAccessPassword').value.trim();if(current!==getAccessPassword()){document.getElementById('settingsStatus').textContent='현재 비밀번호가 맞지 않습니다.';return;}if(next.length<4){document.getElementById('settingsStatus').textContent='새 비밀번호는 최소 4자 이상으로 해주세요.';return;}setAccessPassword(next);document.getElementById('settingsStatus').textContent='이 브라우저의 공통 비밀번호가 변경되었습니다.';document.getElementById('currentAccessPassword').value='';document.getElementById('newAccessPassword').value='';}
+
+document.getElementById('photos').addEventListener('change', e=>{const box=document.getElementById('photoPreview');box.innerHTML='';[...e.target.files].forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);box.appendChild(img);});convertSchedule();});
+renderPlaces();
+</script>
+</body>
+</html>
