@@ -22,8 +22,8 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1><button class="menuBtn" onclick="toggleMenu()">☰</button> BBQ Outpost Publisher <span class="pill">V4.9 Firebase</span></h1>
-      <div class="muted">모바일 우선 · Firebase 공유 저장 · 게시 관리 분리 · 승인/예약/기록</div>
+      <h1><button class="menuBtn" onclick="toggleMenu()">☰</button> BBQ Outpost Publisher <span class="pill">V4.10</span></h1>
+      <div class="muted">모바일 우선 · Firebase 공유 저장 · 로그인 후 로그인창 숨김 · 메뉴 로그아웃</div>
     </div>
     <div><div class="status" id="loginStatus">로그인 안 됨</div><div id="cloudStatus" class="muted small">Firebase 연결 준비 중</div></div>
   </div>
@@ -41,6 +41,7 @@
     <nav id="drawer" class="drawer hidden">
       <div class="drawerHead"><b>☰ 메뉴</b><button class="secondary" style="width:auto" onclick="toggleMenu(false)">닫기</button></div>
       <div id="drawerUser" class="muted small">로그인 안 됨</div>
+      <button id="navLogout" class="secondary hidden" onclick="logoutFromMenu()">🚪 로그아웃</button>
       <button id="navPublisher" class="active" onclick="navigate('publisher')">🏠 게시글 생성</button>
       <button id="navRequests" onclick="navigate('requests')">📋 게시 관리 <span id="badgePending" class="countBadge hidden">0</span></button>
       <button id="navStaff" class="adminOnly" onclick="navigate('staff')">👥 직원 관리</button>
@@ -50,7 +51,7 @@
       <button id="navSettings" class="adminOnly" onclick="navigate('settings')">⚙️ 설정</button>
     </nav>
 
-    <section class="card">
+    <section id="loginCard" class="card">
       <h2>직원 로그인</h2>
       <div class="grid3">
         <input id="loginId" placeholder="아이디 예: 김태민 / manager1 / admin" />
@@ -283,8 +284,9 @@ function log(action, detail){const logs=get(LS.logs,[]); const cur=get(LS.curren
 function enterGate(){const pw=document.getElementById('gatePassword').value.trim(); if(pw===get(LS.gate,'bbq2026')){document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden');renderAll();}else{document.getElementById('gateMsg').textContent='비밀번호가 맞지 않습니다.'}}
 function currentUser(){return get(LS.current,null)}
 function isAdmin(){return currentUser()?.role==='admin'}
-function loginLocal(){const id=document.getElementById('loginId').value.trim(); const pw=document.getElementById('loginPw').value; const u=get(LS.users,[]).find(x=>x.id===id&&x.pw===pw&&x.active); if(!u){alert('로그인 실패');return} set(LS.current,{id:u.id,role:u.role}); log('로그인',u.id); updateLoginStatus(); renderAll();}
+function loginLocal(){const id=document.getElementById('loginId').value.trim(); const pw=document.getElementById('loginPw').value; const u=get(LS.users,[]).find(x=>x.id===id&&x.pw===pw&&x.active); if(!u){alert('로그인 실패');return} set(LS.current,{id:u.id,role:u.role}); document.getElementById('loginPw').value=''; log('로그인',u.id); updateLoginStatus(); renderAll();}
 function logoutLocal(){log('로그아웃',currentUser()?.id||''); localStorage.removeItem(LS.current); updateLoginStatus(); renderAll();}
+function logoutFromMenu(){logoutLocal(); toggleMenu(false); alert('로그아웃되었습니다.');}
 function updateLoginStatus(){const u=currentUser(); document.getElementById('loginStatus').textContent=u?`${u.id} (${u.role==='admin'?'관리자':'직원'})`:'로그인 안 됨';}
 function openPicker(id){const el=document.getElementById(id); if(!el)return; try{ if(typeof el.showPicker==='function'){ el.showPicker(); return; } }catch(e){} el.focus(); el.click();}
 function updateReservePreview(){const d=document.getElementById('reserveDate')?.value; const t=document.getElementById('reserveTime')?.value; const el=document.getElementById('reservePreview'); if(el) el.textContent=(d&&t)?`예약 예정: ${d} ${t}`:'예약 시간 미선택';}
@@ -382,7 +384,7 @@ function deleteUser(id){if(!requireAdmin())return; const users=get(LS.users,[]);
 function renderStaff(){const users=get(LS.users,[]); document.getElementById('staffTable').innerHTML='<table><tr><th>아이디</th><th>권한</th><th>관리</th></tr>'+users.map(u=>`<tr><td>${u.id}</td><td class="${u.role==='admin'?'role-admin':'role-staff'}">${u.role==='admin'?'관리자':'직원'}</td><td><button onclick="setRole('${u.id}','admin')">관리자 지정</button><button class="secondary" onclick="setRole('${u.id}','staff')">직원 변경</button><button class="warn" onclick="resetPw('${u.id}')">비밀번호 재설정</button><button class="bad" onclick="deleteUser('${u.id}')">삭제</button></td></tr>`).join('')+'</table>';}
 function changeGatePassword(){if(!requireAdmin())return; const pw=document.getElementById('newGatePw').value; if(!pw)return alert('새 비밀번호를 입력하세요.'); set(LS.gate,pw); log('공통 비밀번호 변경',''); alert('변경되었습니다.');}
 function renderLogs(){const logs=get(LS.logs,[]); document.getElementById('logList').innerHTML=logs.length?'<table><tr><th>시간</th><th>사용자</th><th>행동</th><th>내용</th></tr>'+logs.map(l=>`<tr><td>${l.time}</td><td>${l.user}</td><td>${l.action}</td><td>${escapeHtml(l.detail||'')}</td></tr>`).join('')+'</table>':'<p class="muted">로그가 없습니다.</p>';}
-function renderAll(){updateLoginStatus(); renderLocations(); renderStaff(); renderRequests(); renderLogs(); updateBadges(); const admin=isAdmin(); document.querySelectorAll('.adminOnly').forEach(el=>el.style.display=admin?'block':'none'); const du=document.getElementById('drawerUser'); if(du){const u=currentUser(); du.textContent=u?`${u.id} (${u.role==='admin'?'관리자':'직원'})`:'로그인 안 됨';}}
+function renderAll(){updateLoginStatus(); renderLocations(); renderStaff(); renderRequests(); renderLogs(); updateBadges(); const admin=isAdmin(); const u=currentUser(); document.querySelectorAll('.adminOnly').forEach(el=>el.style.display=admin?'block':'none'); const du=document.getElementById('drawerUser'); if(du){du.textContent=u?`${u.id} (${u.role==='admin'?'관리자':'직원'})`:'로그인 안 됨';} const loginCard=document.getElementById('loginCard'); if(loginCard){loginCard.classList.toggle('hidden',!!u);} const navLogout=document.getElementById('navLogout'); if(navLogout){navLogout.classList.toggle('hidden',!u);}}
 function escapeHtml(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 function escapeJs(s){return String(s).replace(/'/g,"\\'");}
 init();
