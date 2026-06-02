@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BBQ Outpost Publisher V4.8</title>
+  <title>BBQ Outpost Publisher V4.9 Firebase</title>
   <style>
     :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text)}.wrap{max-width:1120px;margin:0 auto;padding:22px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}.hidden{display:none!important}.tabs button{background:#1f2937}.tabs button.active{background:var(--accent)}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:220px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}.small{font-size:12px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.status{font-size:13px;color:#cbd5e1}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:95px;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}
 
@@ -22,10 +22,10 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1><button class="menuBtn" onclick="toggleMenu()">☰</button> BBQ Outpost Publisher <span class="pill">V4.8</span></h1>
-      <div class="muted">모바일 우선 · 햄버거 메뉴 · 게시 관리 분리 · 승인/예약/기록</div>
+      <h1><button class="menuBtn" onclick="toggleMenu()">☰</button> BBQ Outpost Publisher <span class="pill">V4.9 Firebase</span></h1>
+      <div class="muted">모바일 우선 · Firebase 공유 저장 · 게시 관리 분리 · 승인/예약/기록</div>
     </div>
-    <div class="status" id="loginStatus">로그인 안 됨</div>
+    <div><div class="status" id="loginStatus">로그인 안 됨</div><div id="cloudStatus" class="muted small">Firebase 연결 준비 중</div></div>
   </div>
 
   <section id="gate" class="card">
@@ -60,7 +60,7 @@
           <button class="secondary" onclick="logoutLocal()">로그아웃</button>
         </div>
       </div>
-      <p class="muted">Firebase 연결 전에도 테스트할 수 있게 로컬 직원 관리로 동작합니다. 실제 운영 시 Firebase Auth/Firestore와 연결하면 됩니다.</p>
+      <p class="muted">직원/장소/승인요청/로그는 Firebase Firestore에 공유 저장됩니다. Firebase 연결 실패 시 현재 기기 저장으로 임시 동작합니다.</p>
     </section>
 
     <section id="publisher" class="tab card">
@@ -195,7 +195,31 @@
   </main>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBxb_2auajjij5cHJGpI_W641jopQ05uxA",
+  authDomain: "bbq-outpost.firebaseapp.com",
+  projectId: "bbq-outpost",
+  storageBucket: "bbq-outpost.firebasestorage.app",
+  messagingSenderId: "967199098059",
+  appId: "1:967199098059:web:482dff12193966694d474e"
+};
+let db = null;
+let cloudReady = false;
+let cloudSyncing = false;
+let renderTimer = null;
+function setCloudStatus(text, ok=true){
+  const el=document.getElementById('cloudStatus');
+  if(!el)return;
+  el.textContent=text;
+  el.className=ok?'ok small':'err small';
+}
+function scheduleRender(){
+  clearTimeout(renderTimer);
+  renderTimer=setTimeout(()=>{try{renderAll()}catch(e){}},80);
+}
 const LS = {
   gate:'bbq_gate_password_v41', locations:'bbq_locations_v41', users:'bbq_users_v41', current:'bbq_current_user_v41', requests:'bbq_requests_v41', logs:'bbq_logs_v41'
 };
@@ -203,7 +227,47 @@ const defaultLocations = {
   '찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','원스탑':'Maude Hall Parking Lots','USFK':'USFK parking lot','usfk':'USFK parking lot'
 };
 function get(k, fallback){try{return JSON.parse(localStorage.getItem(k)) ?? fallback}catch(e){return fallback}}
-function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function cloudDocId(k){return String(k).replace(/[^a-zA-Z0-9_-]/g,'_')}
+async function cloudSave(k,v){
+  if(!cloudReady||!db||k===LS.current||cloudSyncing)return;
+  try{await db.collection('appData').doc(cloudDocId(k)).set({value:v,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});}
+  catch(e){console.error('cloudSave failed',k,e);setCloudStatus('Firebase 저장 오류',false)}
+}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v)); cloudSave(k,v)}
+function setLocalOnly(k,v){localStorage.setItem(k,JSON.stringify(v))}
+async function initCloud(){
+  try{
+    if(!window.firebase){setCloudStatus('Firebase SDK 로드 실패',false);return}
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db=firebase.firestore();
+    setCloudStatus('Firebase 연결 확인 중...');
+    const seedItems=[
+      [LS.gate,'bbq2026'],
+      [LS.locations,defaultLocations],
+      [LS.users,[{id:'admin',pw:'admin1234',role:'admin',active:true},{id:'manager1',pw:'manager1234',role:'staff',active:true}]],
+      [LS.requests,[]],
+      [LS.logs,[]]
+    ];
+    for(const [k,fallback] of seedItems){
+      const ref=db.collection('appData').doc(cloudDocId(k));
+      const snap=await ref.get();
+      if(snap.exists && snap.data() && Object.prototype.hasOwnProperty.call(snap.data(),'value')){
+        cloudSyncing=true; setLocalOnly(k,snap.data().value); cloudSyncing=false;
+      }else{
+        const local=get(k,fallback);
+        await ref.set({value:local,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+      }
+      ref.onSnapshot(s=>{
+        if(!s.exists || !s.data() || !Object.prototype.hasOwnProperty.call(s.data(),'value'))return;
+        cloudSyncing=true; setLocalOnly(k,s.data().value); cloudSyncing=false;
+        scheduleRender();
+      },err=>{console.error('snapshot failed',k,err);setCloudStatus('Firebase 권한/연결 오류',false)});
+    }
+    cloudReady=true;
+    setCloudStatus('Firebase 연결됨');
+    scheduleRender();
+  }catch(e){console.error('initCloud failed',e);setCloudStatus('Firebase 연결 실패 - 로컬 임시 저장 중',false)}
+}
 function init(){
   if(!localStorage.getItem(LS.gate)) set(LS.gate,'bbq2026');
   if(!localStorage.getItem(LS.locations)) set(LS.locations,defaultLocations);
@@ -213,6 +277,7 @@ function init(){
   document.getElementById('scheduleYear').value = new Date().getFullYear();
   const d=new Date(); document.getElementById('reserveDate').value = d.toISOString().slice(0,10); updateReservePreview();
   const cur=get(LS.current,null); if(cur) updateLoginStatus();
+  initCloud();
 }
 function log(action, detail){const logs=get(LS.logs,[]); const cur=get(LS.current,null); logs.unshift({time:new Date().toLocaleString('ko-KR'),user:cur?.id||'system',action,detail}); set(LS.logs,logs.slice(0,200)); renderLogs();}
 function enterGate(){const pw=document.getElementById('gatePassword').value.trim(); if(pw===get(LS.gate,'bbq2026')){document.getElementById('gate').classList.add('hidden');document.getElementById('app').classList.remove('hidden');renderAll();}else{document.getElementById('gateMsg').textContent='비밀번호가 맞지 않습니다.'}}
