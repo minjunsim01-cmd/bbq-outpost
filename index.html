@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BBQ Outpost Publisher V4.4</title>
+  <title>BBQ Outpost Publisher V4.5</title>
   <style>
     :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text)}.wrap{max-width:1120px;margin:0 auto;padding:22px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}.hidden{display:none!important}.tabs button{background:#1f2937}.tabs button.active{background:var(--accent)}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:220px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}.small{font-size:12px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.status{font-size:13px;color:#cbd5e1}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:95px;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}
 
-    label{display:block;color:#cbd5e1;font-size:14px;margin-bottom:6px}.reserveBox{border:1px solid var(--line);background:#0b1220;border-radius:12px;padding:12px;margin:10px 0}.requestActions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.requestTimeGrid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-top:10px}.tabs{display:flex;flex-wrap:wrap;gap:6px}.tabs button{margin:0}.desktopOnly{display:inline}
+    label{display:block;color:#cbd5e1;font-size:14px;margin-bottom:6px}.pickerRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.pickerHelp{font-size:12px;color:#94a3b8;margin-top:4px}.pickerBtn{white-space:nowrap;background:#475569}.reserveBox{border:1px solid var(--line);background:#0b1220;border-radius:12px;padding:12px;margin:10px 0}.requestActions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.requestTimeGrid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-top:10px}.tabs{display:flex;flex-wrap:wrap;gap:6px}.tabs button{margin:0}.desktopOnly{display:inline}
     @media (max-width: 760px){
-      .wrap{padding:12px}.card{padding:14px;border-radius:14px;margin:10px 0}h1{font-size:22px}h2{font-size:18px}h3{font-size:16px}.grid,.grid3,.requestTimeGrid{grid-template-columns:1fr}.topbar{align-items:flex-start}.status{width:100%;background:#020617;border:1px solid var(--line);border-radius:10px;padding:8px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tabs button,button{width:100%;margin:3px 0;padding:13px 12px}textarea{min-height:190px;font-size:16px}input,select,textarea{font-size:16px;padding:13px}.output{min-height:160px;max-height:330px;overflow:auto}.preview img{max-width:88px}.photoRow img{width:78px;height:78px}table{display:block;overflow-x:auto;white-space:nowrap}th,td{font-size:13px;padding:8px}.desktopOnly{display:none}.requestActions{display:grid;grid-template-columns:1fr;gap:6px}.pill{font-size:12px}
+      .pickerRow{grid-template-columns:1fr}.wrap{padding:12px}.card{padding:14px;border-radius:14px;margin:10px 0}h1{font-size:22px}h2{font-size:18px}h3{font-size:16px}.grid,.grid3,.requestTimeGrid{grid-template-columns:1fr}.topbar{align-items:flex-start}.status{width:100%;background:#020617;border:1px solid var(--line);border-radius:10px;padding:8px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tabs button,button{width:100%;margin:3px 0;padding:13px 12px}textarea{min-height:190px;font-size:16px}input,select,textarea{font-size:16px;padding:13px}.output{min-height:160px;max-height:330px;overflow:auto}.preview img{max-width:88px}.photoRow img{width:78px;height:78px}table{display:block;overflow-x:auto;white-space:nowrap}th,td{font-size:13px;padding:8px}.desktopOnly{display:none}.requestActions{display:grid;grid-template-columns:1fr;gap:6px}.pill{font-size:12px}
     }
     @media (min-width: 761px){.mobileHint{display:none}}
 
@@ -19,7 +19,7 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1>BBQ Outpost Publisher <span class="pill">V4.4</span></h1>
+      <h1>BBQ Outpost Publisher <span class="pill">V4.5</span></h1>
       <div class="muted">스케줄 변환 · 사진 미리보기 · 승인 요청 전 예약 날짜/시간 선택 · 직원 관리 · 감사 로그</div>
     </div>
     <div class="status" id="loginStatus">로그인 안 됨</div>
@@ -70,14 +70,24 @@
             <button onclick="generatePost()">변환</button>
           </div>
           <h3>예약 날짜 / 시간 <span class="pill">승인 요청 전 변경 가능</span></h3>
-          <p class="muted">승인 요청을 누르기 전에 원하는 게시 날짜와 시간을 선택하세요. 날짜 칸을 누르면 달력, 시간 칸을 누르면 시간 선택 화면이 열립니다.</p>
+          <p class="muted">직접 타이핑해도 되고, 오른쪽 버튼을 눌러 달력/시계 선택 화면을 열어도 됩니다.</p>
           <div class="grid">
-            <label>예약 날짜
-              <input id="reserveDate" type="date" onchange="updateReservePreview()" />
-            </label>
-            <label>예약 시간
-              <input id="reserveTime" type="time" value="10:00" step="300" onchange="updateReservePreview()" />
-            </label>
+            <div>
+              <label for="reserveDate">예약 날짜</label>
+              <div class="pickerRow">
+                <input id="reserveDate" type="date" inputmode="numeric" onchange="updateReservePreview()" oninput="updateReservePreview()" />
+                <button type="button" class="pickerBtn" onclick="openPicker('reserveDate')">달력 열기</button>
+              </div>
+              <div class="pickerHelp">예: 2026-06-02 형식으로 직접 입력 가능</div>
+            </div>
+            <div>
+              <label for="reserveTime">예약 시간</label>
+              <div class="pickerRow">
+                <input id="reserveTime" type="time" value="10:00" step="300" inputmode="numeric" onchange="updateReservePreview()" oninput="updateReservePreview()" />
+                <button type="button" class="pickerBtn" onclick="openPicker('reserveTime')">시계 열기</button>
+              </div>
+              <div class="pickerHelp">예: 10:00 또는 16:30 직접 입력 가능</div>
+            </div>
           </div>
           <div id="reservePreview" class="pill" style="margin-top:8px">예약 시간 미선택</div>
           <h3>사진 첨부</h3>
@@ -174,6 +184,7 @@ function isAdmin(){return currentUser()?.role==='admin'}
 function loginLocal(){const id=document.getElementById('loginId').value.trim(); const pw=document.getElementById('loginPw').value; const u=get(LS.users,[]).find(x=>x.id===id&&x.pw===pw&&x.active); if(!u){alert('로그인 실패');return} set(LS.current,{id:u.id,role:u.role}); log('로그인',u.id); updateLoginStatus(); renderAll();}
 function logoutLocal(){log('로그아웃',currentUser()?.id||''); localStorage.removeItem(LS.current); updateLoginStatus(); renderAll();}
 function updateLoginStatus(){const u=currentUser(); document.getElementById('loginStatus').textContent=u?`${u.id} (${u.role==='admin'?'관리자':'직원'})`:'로그인 안 됨';}
+function openPicker(id){const el=document.getElementById(id); if(!el)return; try{ if(typeof el.showPicker==='function'){ el.showPicker(); return; } }catch(e){} el.focus(); el.click();}
 function updateReservePreview(){const d=document.getElementById('reserveDate')?.value; const t=document.getElementById('reserveTime')?.value; const el=document.getElementById('reservePreview'); if(el) el.textContent=(d&&t)?`예약 예정: ${d} ${t}`:'예약 시간 미선택';}
 function requireAdmin(){if(!isAdmin()){alert('관리자만 가능합니다.');return false} return true}
 function showTab(id,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active')); if(btn)btn.classList.add('active'); renderAll();}
@@ -201,7 +212,7 @@ function renderRequests(){
   box.innerHTML=data.map(r=>{
     const rt=splitReserveAt(r.reserveAt);
     const canEdit=isAdmin() || r.author===u?.id;
-    return `<div class="card"><div><b>${r.title}</b> <span class="pill">${r.status}</span></div><div class="muted">날짜: ${r.dateKey} · 작성자: ${r.author} · 예약: <b>${r.reserveAt}</b></div><pre class="output" style="min-height:80px;max-height:180px;overflow:auto">${escapeHtml(r.post)}</pre>${canEdit?`<div class="reserveBox"><b>예약 날짜/시간 변경</b><p class="muted">날짜 칸은 달력, 시간 칸은 시간 선택 화면으로 열립니다.</p><div class="requestTimeGrid"><label>예약 날짜<input id="reqDate_${r.id}" type="date" value="${rt.date}"></label><label>예약 시간<input id="reqTime_${r.id}" type="time" value="${rt.time}" step="300"></label><button class="secondary" onclick="changeReserveReq('${r.id}')">변경 저장</button></div></div>`:''}<div class="requestActions">${isAdmin()?`<button class="good" onclick="approveReq('${r.id}')">승인</button><button class="bad" onclick="rejectReq('${r.id}')">반려</button><button class="warn" onclick="urgentReq('${r.id}')">긴급 게시</button><button class="secondary" onclick="cancelReq('${r.id}')">취소</button>`:''}</div></div>`;
+    return `<div class="card"><div><b>${r.title}</b> <span class="pill">${r.status}</span></div><div class="muted">날짜: ${r.dateKey} · 작성자: ${r.author} · 예약: <b>${r.reserveAt}</b></div><pre class="output" style="min-height:80px;max-height:180px;overflow:auto">${escapeHtml(r.post)}</pre>${canEdit?`<div class="reserveBox"><b>예약 날짜/시간 변경</b><p class="muted">직접 타이핑하거나 버튼을 눌러 달력/시계를 열 수 있습니다.</p><div class="requestTimeGrid"><div><label for="reqDate_${r.id}">예약 날짜</label><div class="pickerRow"><input id="reqDate_${r.id}" type="date" inputmode="numeric" value="${rt.date}"><button type="button" class="pickerBtn" onclick="openPicker('reqDate_${r.id}')">달력 열기</button></div></div><div><label for="reqTime_${r.id}">예약 시간</label><div class="pickerRow"><input id="reqTime_${r.id}" type="time" inputmode="numeric" value="${rt.time}" step="300"><button type="button" class="pickerBtn" onclick="openPicker('reqTime_${r.id}')">시계 열기</button></div></div><button class="secondary" onclick="changeReserveReq('${r.id}')">변경 저장</button></div></div>`:''}<div class="requestActions">${isAdmin()?`<button class="good" onclick="approveReq('${r.id}')">승인</button><button class="bad" onclick="rejectReq('${r.id}')">반려</button><button class="warn" onclick="urgentReq('${r.id}')">긴급 게시</button><button class="secondary" onclick="cancelReq('${r.id}')">취소</button>`:''}</div></div>`;
   }).join('');
 }
 function updateReq(id,patch){const reqs=get(LS.requests,[]); const idx=reqs.findIndex(r=>r.id===id); if(idx<0)return; reqs[idx]={...reqs[idx],...patch}; set(LS.requests,reqs); renderRequests();}
