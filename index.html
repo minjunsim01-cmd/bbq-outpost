@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BBQ Outpost Operations V5</title>
+  <title>BBQ Outpost Operations V5.1</title>
   <style>
-    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308;--blue:#38bdf8}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text);padding-bottom:78px}.wrap{max-width:1120px;margin:0 auto;padding:16px}.topbar{position:sticky;top:0;z-index:20;background:rgba(15,23,42,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:-16px -16px 12px;padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.menuBtn{background:#1f2937;border:1px solid var(--line);border-radius:12px;color:white;font-size:22px;width:48px;height:48px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 10px}h1{font-size:20px}.muted{color:var(--muted);font-size:14px}.small{font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:12px;padding:13px 15px;font-weight:800;cursor:pointer;margin:4px 4px 4px 0;font-size:15px}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}button.blue{background:#0284c7}.hidden{display:none!important}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:180px;overflow:auto}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.copyBar{display:flex;flex-wrap:wrap;gap:6px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.drawer{position:fixed;top:0;left:0;bottom:0;width:310px;max-width:86vw;background:#020617;border-right:1px solid var(--line);z-index:60;transform:translateX(-105%);transition:.2s ease;box-shadow:10px 0 30px rgba(0,0,0,.35);padding:16px}.drawer.open{transform:translateX(0)}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50}.drawerHead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.navItem{display:block;width:100%;text-align:left;background:#111827;border:1px solid var(--line);margin:8px 0}.navItem.active{background:var(--accent)}.bottomTabs{position:fixed;bottom:0;left:0;right:0;background:#020617;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:25}.bottomTabs button{border-radius:0;background:#020617;margin:0;padding:10px 4px;font-size:12px;border-right:1px solid #1e293b}.bottomTabs button.active{background:#1f2937;color:#fed7aa}.loginBox{max-width:680px;margin:auto}.rateGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rateCell{background:#020617;border:1px solid var(--line);border-radius:10px;padding:10px}.vehicleBadge{font-weight:900;color:#fde68a}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}
-    @media(max-width:760px){.wrap{padding:12px}.topbar{margin:-12px -12px 10px;padding:10px 12px}.card{padding:14px;border-radius:14px}.grid,.grid3{grid-template-columns:1fr}.brand h1{font-size:17px}textarea{min-height:190px}.copyBar button,button{width:100%;margin:3px 0}.rateGrid{grid-template-columns:repeat(2,1fr)}table{display:block;overflow-x:auto;white-space:nowrap}th,td{font-size:13px}.statusText{font-size:12px}.preview img{max-width:82px}.photoRow img{width:76px;height:76px}}
+    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308;--blue:#38bdf8}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text);padding-bottom:78px}.wrap{max-width:1120px;margin:0 auto;padding:16px}.topbar{position:sticky;top:0;z-index:20;background:rgba(15,23,42,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:-16px -16px 12px;padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.menuBtn{background:#1f2937;border:1px solid var(--line);border-radius:12px;color:white;font-size:22px;width:48px;height:48px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 10px}h1{font-size:20px}.muted{color:var(--muted);font-size:14px}.small{font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:12px;padding:13px 15px;font-weight:800;cursor:pointer;margin:4px 4px 4px 0;font-size:15px}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}button.blue{background:#0284c7}.hidden{display:none!important}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:180px;overflow:auto}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.copyBar{display:flex;flex-wrap:wrap;gap:6px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.drawer{position:fixed;top:0;left:0;bottom:0;width:310px;max-width:86vw;background:#020617;border-right:1px solid var(--line);z-index:60;transform:translateX(-105%);transition:.2s ease;box-shadow:10px 0 30px rgba(0,0,0,.35);padding:16px}.drawer.open{transform:translateX(0)}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50}.drawerHead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.navItem{display:block;width:100%;text-align:left;background:#111827;border:1px solid var(--line);margin:8px 0}.navItem.active{background:var(--accent)}.bottomTabs{position:fixed;bottom:0;left:0;right:0;background:#020617;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:25}.bottomTabs button{border-radius:0;background:#020617;margin:0;padding:10px 4px;font-size:12px;border-right:1px solid #1e293b}.bottomTabs button.active{background:#1f2937;color:#fed7aa}.loginBox{max-width:680px;margin:auto}.rateGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rateCell{background:#020617;border:1px solid var(--line);border-radius:10px;padding:10px}.vehicleBadge{font-weight:900;color:#fde68a}.dispatchEditorRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:#020617}.dispatchEditorRow label{font-size:12px;color:#94a3b8}.dispatchSectionTitle{margin-top:14px;color:#fed7aa;font-weight:900}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}
+    @media(max-width:760px){.dispatchEditorRow{grid-template-columns:1fr}.wrap{padding:12px}.topbar{margin:-12px -12px 10px;padding:10px 12px}.card{padding:14px;border-radius:14px}.grid,.grid3{grid-template-columns:1fr}.brand h1{font-size:17px}textarea{min-height:190px}.copyBar button,button{width:100%;margin:3px 0}.rateGrid{grid-template-columns:repeat(2,1fr)}table{display:block;overflow-x:auto;white-space:nowrap}th,td{font-size:13px}.statusText{font-size:12px}.preview img{max-width:82px}.photoRow img{width:76px;height:76px}}
   </style>
 </head>
 <body>
@@ -29,7 +29,7 @@
 </nav>
 <div class="wrap">
   <header class="topbar">
-    <div class="brand"><button class="menuBtn" onclick="openMenu()">☰</button><div><h1>BBQ Outpost <span class="pill">V5</span></h1><div class="muted small">게시글 변환 · 배차표 · 환율표</div></div></div>
+    <div class="brand"><button class="menuBtn" onclick="openMenu()">☰</button><div><h1>BBQ Outpost <span class="pill">V5.1</span></h1><div class="muted small">게시글 변환 · 배차표 · 환율표</div></div></div>
     <div class="statusText"><div id="loginStatus">로그인 안 됨</div></div>
   </header>
 
@@ -81,9 +81,11 @@
 
     <section id="dispatch" class="view card hidden">
       <div class="sectionTitle"><h2>🚚 배차표</h2><span class="pill">오산 포함 · 약어 그대로 표시</span></div>
-      <p class="muted">게시글에서는 오산을 제외하지만, 배차표에는 오산을 포함합니다. 2276은 오산 고정 차량입니다.</p>
+      <p class="muted">게시글에서는 오산을 제외하지만, 배차표에는 오산을 포함합니다. 차량별 우선순위에 따라 자동 배정하고, 생성 후에는 아래에서 차량/장소/수량을 직접 수정할 수 있습니다.</p>
       <div id="dispatchResult" class="output"></div>
       <button onclick="copyText('dispatchResult')">배차표 복사</button>
+      <h3>배차표 직접 수정</h3>
+      <div id="dispatchEditor"></div>
     </section>
 
     <section id="rates" class="view card hidden">
@@ -99,10 +101,10 @@
 
     <section id="vehicles" class="view card hidden">
       <h2>🚛 차량 관리 <span class="pill">관리자 전용</span></h2>
-      <div class="notice">2276은 오산 고정으로 자동 처리됩니다. 나머지 차량은 배차 순서대로 자동 배정됩니다.</div>
+      <div class="notice">차량별 우선순위를 정할 수 있습니다. 양 많은 우선 차량은 수량이 큰 장소부터, 양 적은 우선 차량은 수량이 작은 장소부터 자동 배정됩니다. 2276은 오산 고정입니다.</div>
       <div class="grid3" style="margin-top:12px">
         <input id="vehicleInput" placeholder="차량번호 예: 6233" />
-        <select id="vehicleType"><option value="normal">일반 차량</option><option value="osan">오산 고정</option></select>
+        <select id="vehicleType"><option value="normal">일반</option><option value="large">양 많은 곳 우선</option><option value="small">양 적은 곳 우선</option><option value="osan">오산 고정</option></select>
         <button onclick="addVehicle()">차량 추가</button>
       </div>
       <div id="vehicleTable"></div>
@@ -157,7 +159,7 @@ const firebaseConfig={apiKey:"AIzaSyBxb_2auajjij5cHJGpI_W641jopQ05uxA",authDomai
 let db=null, cloudReady=false, cloudSyncing=false, renderTimer=null;
 const LS={gate:'bbq_gate_password_v41',locations:'bbq_locations_v41',users:'bbq_users_v41',current:'bbq_current_user_v41',logs:'bbq_logs_v41',vehicles:'bbq_vehicles_v5'};
 const defaultLocations={'찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','원스탑':'Maude Hall Parking Lots','USFK':'USFK parking lot','Usfk':'USFK parking lot','usfk':'USFK parking lot'};
-const defaultVehicles=[{no:'6233',type:'normal'},{no:'6356',type:'normal'},{no:'5474',type:'normal'},{no:'6279',type:'normal'},{no:'6174',type:'normal'},{no:'2276',type:'osan'}];
+const defaultVehicles=[{no:'6233',type:'large'},{no:'6356',type:'normal'},{no:'5474',type:'normal'},{no:'6279',type:'small'},{no:'6174',type:'normal'},{no:'2276',type:'osan'}];
 function setCloudStatus(text,ok=true){const el=document.getElementById('cloudStatus');if(el){el.textContent=text;el.className=ok?'ok small':'err small'}}
 function get(k,fallback){try{return JSON.parse(localStorage.getItem(k))??fallback}catch(e){return fallback}}
 function setLocalOnly(k,v){localStorage.setItem(k,JSON.stringify(v))}
@@ -179,8 +181,60 @@ function parseRate(raw){const m=raw.replace(/,/g,'').match(/환율[^0-9]*(\d{3,5
 function normalizeToken(line){return line.trim().split(/\s+/)[0]}function parseQty(line){const parts=line.trim().split(/\s+/).slice(1);for(const p of parts){if(/^\d+(\.\d+)?$/.test(p)&&!/^\d{4}$/.test(p))return p}return ''}
 function parseSchedule(){const raw=document.getElementById('raw').value;const locs=get(LS.locations,{});let section=null;const lunch=[],dinner=[],unknown=[];raw.split(/\n/).forEach(line=>{const t=line.trim();if(!t)return;if(t==='점'||t.startsWith('점 ')){section='lunch';return}if(t==='저'||t.startsWith('저 ')){section='dinner';return}if(!section)return;const tok=normalizeToken(t);if(!tok||tok.includes('환율'))return;if(/^\d+(\.\d+)?$/.test(tok)&&!locs[tok])return;if(/^\d{4}$/.test(tok)&&!locs[tok])return;const qty=parseQty(t);const item={alias:tok,full:locs[tok]||tok,qty,line:t};if(tok==='오산'||locs[tok]){(section==='dinner'?dinner:lunch).push(item)}else unknown.push(tok)});return{raw,dt:parseDate(raw),rate:parseRate(raw),lunch,dinner,unknown}}
 function generatePost(data){const d=data||parseSchedule();const build=arr=>arr.filter(x=>x.alias!=='오산').map((x,i)=>`${i%2===0?'🚚':'🚎'} ${i+1} - ${x.full}`).join('\n');const title=d.dt?`🔥 ${d.dt.title} schedule🔥`:'🔥 schedule🔥';const post=`${title}\n\nLunch (11:00~)\n\n${build(d.lunch)}\n\nDinner (16:00~)\n\n${build(d.dinner)}\n\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys`;document.getElementById('result').textContent=post;document.getElementById('fbText').textContent=post;return post}
-function assignVehicles(items){const vehicles=get(LS.vehicles,defaultVehicles);const osan=vehicles.find(v=>v.type==='osan')?.no||'2276';const normals=vehicles.filter(v=>v.type!=='osan').map(v=>v.no);let idx=0;return items.map(it=>{if(it.alias==='오산')return{...it,vehicle:osan};const vehicle=normals[idx%Math.max(normals.length,1)]||'';idx++;return{...it,vehicle}})}
-function renderDispatch(data){const d=data||parseSchedule();const fmt=(title,arr)=>{const rows=assignVehicles(arr);return `[${title}]\n`+(rows.length?rows.map(r=>`${r.vehicle} - ${r.alias}${r.qty?` - ${r.qty}`:''}`).join('\n'):'없음')};const out=`${d.dt?d.dt.key:''} 배차표\n\n${fmt('점심',d.lunch)}\n\n${fmt('저녁',d.dinner)}`;document.getElementById('dispatchResult').textContent=out;return out}
+function qtyNumber(q){const n=Number(String(q||'').replace(/[^0-9.]/g,''));return isNaN(n)?0:n}
+function vehicleLabel(v){if(v.type==='osan')return `${v.no} - 오산 고정`; if(v.type==='large')return `${v.no} - 양 많은 우선`; if(v.type==='small')return `${v.no} - 양 적은 우선`; return `${v.no} - 일반`}
+function assignVehicles(items,sectionName){
+  const vehicles=get(LS.vehicles,defaultVehicles);
+  const osan=vehicles.find(v=>v.type==='osan')?.no||'2276';
+  const normalVehicles=vehicles.filter(v=>v.type!=='osan');
+  const rows=items.map((it,i)=>({...it,idx:i,section:sectionName,vehicle:''}));
+  rows.forEach(r=>{if(r.alias==='오산')r.vehicle=osan});
+  const candidates=rows.filter(r=>r.alias!=='오산');
+  const used=new Set();
+  const pick=(mode)=>{
+    const remaining=candidates.filter(r=>!used.has(r.idx));
+    if(!remaining.length)return null;
+    remaining.sort((a,b)=>mode==='large'?qtyNumber(b.qty)-qtyNumber(a.qty):qtyNumber(a.qty)-qtyNumber(b.qty));
+    used.add(remaining[0].idx);return remaining[0];
+  };
+  normalVehicles.filter(v=>v.type==='large').forEach(v=>{const r=pick('large');if(r)r.vehicle=v.no});
+  normalVehicles.filter(v=>v.type==='small').forEach(v=>{const r=pick('small');if(r)r.vehicle=v.no});
+  let normalIdx=0;
+  const normalList=normalVehicles.filter(v=>v.type==='normal');
+  candidates.filter(r=>!used.has(r.idx)).forEach(r=>{const pool=normalList.length?normalList:normalVehicles; r.vehicle=pool.length?pool[normalIdx++%pool.length].no:''; used.add(r.idx)});
+  candidates.filter(r=>!r.vehicle).forEach((r,i)=>{if(normalVehicles.length)r.vehicle=normalVehicles[i%normalVehicles.length].no});
+  return rows;
+}
+function renderDispatch(data){
+  const d=data||parseSchedule();
+  window.currentDispatch={dateKey:d.dt?d.dt.key:'',lunch:assignVehicles(d.lunch,'점심'),dinner:assignVehicles(d.dinner,'저녁')};
+  renderDispatchOutput();
+  renderDispatchEditor();
+  return document.getElementById('dispatchResult').textContent;
+}
+function dispatchLines(){
+  const cur=window.currentDispatch||{dateKey:'',lunch:[],dinner:[]};
+  const fmt=(title,rows)=>`[${title}]\n`+(rows.length?rows.map(r=>`${r.vehicle||''} - ${r.alias}${r.qty?` - ${r.qty}`:''}`).join('\n'):'없음');
+  return `${cur.dateKey||''} 배차표\n\n${fmt('점심',cur.lunch)}\n\n${fmt('저녁',cur.dinner)}`;
+}
+function renderDispatchOutput(){document.getElementById('dispatchResult').textContent=dispatchLines()}
+function renderDispatchEditor(){
+  const box=document.getElementById('dispatchEditor');if(!box)return;
+  const cur=window.currentDispatch||{lunch:[],dinner:[]};
+  const vehicles=get(LS.vehicles,defaultVehicles);
+  const opts=vehicles.map(v=>`<option value="${escapeHtml(v.no)}">${escapeHtml(vehicleLabel(v))}</option>`).join('');
+  const rowHtml=(section,rows)=>rows.map((r,i)=>`<div class="dispatchEditorRow"><div><label>차량</label><select onchange="updateDispatchRow('${section}',${i},'vehicle',this.value)"><option value="">차량 선택</option>${opts}</select></div><div><label>장소</label><input value="${escapeHtml(r.alias)}" oninput="updateDispatchRow('${section}',${i},'alias',this.value)"></div><div><label>수량</label><input value="${escapeHtml(r.qty||'')}" inputmode="decimal" oninput="updateDispatchRow('${section}',${i},'qty',this.value)"></div></div>`).join('');
+  box.innerHTML=`<div class="dispatchSectionTitle">점심</div>${rowHtml('lunch',cur.lunch)||'<p class="muted">없음</p>'}<div class="dispatchSectionTitle">저녁</div>${rowHtml('dinner',cur.dinner)||'<p class="muted">없음</p>'}`;
+  [...box.querySelectorAll('select')].forEach((sel,idx)=>{
+    const all=[...cur.lunch,...cur.dinner]; if(all[idx]) sel.value=all[idx].vehicle||'';
+  });
+}
+function updateDispatchRow(section,index,field,value){
+  if(!window.currentDispatch)return;
+  if(!window.currentDispatch[section]||!window.currentDispatch[section][index])return;
+  window.currentDispatch[section][index][field]=value;
+  renderDispatchOutput();
+}
 function renderRateTable(){const manual=Number(String(document.getElementById('manualRate').value).replace(/,/g,''));const data=parseSchedule();const rate=manual||data.rate;const badge=document.getElementById('rateBadge');const grid=document.getElementById('rateTable');const text=document.getElementById('rateText');if(!rate){badge.textContent='환율 미인식';grid.innerHTML='<p class="muted">스케줄에 환율이 없으면 직접 입력하세요.</p>';text.textContent='';return}badge.textContent=`환율 ${rate.toLocaleString()}원`;let html='',lines=[`환율 ${rate.toLocaleString()}원`];for(let i=1;i<=30;i++){const won=rate*i;html+=`<div class="rateCell"><b>$${i}</b><br>${won.toLocaleString()}원</div>`;lines.push(`$${i} = ${won.toLocaleString()}원`)}grid.innerHTML=html;text.textContent=lines.join('\n')}
 function useDetectedRate(){const r=parseSchedule().rate;if(r){document.getElementById('manualRate').value=r;renderRateTable()}else alert('스케줄에서 환율을 찾지 못했습니다. 직접 입력하세요.')}
 function copyRateTable(){renderRateTable();navigator.clipboard.writeText(document.getElementById('rateText').textContent||'');alert('환율표를 복사했습니다.')}
@@ -192,7 +246,7 @@ function copyText(id){navigator.clipboard.writeText(document.getElementById(id).
 function saveLocation(){if(!requireAdmin())return;const a=document.getElementById('aliasInput').value.trim(),f=document.getElementById('fullInput').value.trim();if(!a||!f)return alert('약어와 정식 장소명을 입력하세요.');const loc=get(LS.locations,{});loc[a]=f;set(LS.locations,loc);log('장소 저장',`${a} => ${f}`);renderLocations()}function deleteLocation(a){if(!requireAdmin())return;const loc=get(LS.locations,{});delete loc[a];set(LS.locations,loc);log('장소 삭제',a);renderLocations()}
 function renderLocations(){const loc=get(LS.locations,{});document.getElementById('locationTable').innerHTML='<table><tr><th>약어</th><th>정식 장소명</th><th></th></tr>'+Object.keys(loc).sort().map(a=>`<tr><td>${escapeHtml(a)}</td><td>${escapeHtml(loc[a])}</td><td>${isAdmin()?`<button class="bad" onclick="deleteLocation('${escapeJs(a)}')">삭제</button>`:''}</td></tr>`).join('')+'</table>'}
 function addVehicle(){if(!requireAdmin())return;const no=document.getElementById('vehicleInput').value.trim();const type=document.getElementById('vehicleType').value;if(!/^\d{3,5}$/.test(no))return alert('차량번호를 입력하세요.');const list=get(LS.vehicles,defaultVehicles);if(list.some(v=>v.no===no))return alert('이미 있는 차량입니다.');list.push({no,type});set(LS.vehicles,list);log('차량 추가',`${no} (${type})`);renderVehicles()}function deleteVehicle(no){if(!requireAdmin())return;let list=get(LS.vehicles,defaultVehicles);list=list.filter(v=>v.no!==no);set(LS.vehicles,list);log('차량 삭제',no);renderVehicles()}
-function renderVehicles(){const list=get(LS.vehicles,defaultVehicles);document.getElementById('vehicleTable').innerHTML='<table><tr><th>차량</th><th>구분</th><th></th></tr>'+list.map(v=>`<tr><td class="vehicleBadge">${v.no}</td><td>${v.type==='osan'?'오산 고정':'일반'}</td><td>${isAdmin()?`<button class="bad" onclick="deleteVehicle('${v.no}')">삭제</button>`:''}</td></tr>`).join('')+'</table>'}
+function renderVehicles(){const list=get(LS.vehicles,defaultVehicles);document.getElementById('vehicleTable').innerHTML='<table><tr><th>차량</th><th>배정 우선순위</th><th></th></tr>'+list.map(v=>`<tr><td class="vehicleBadge">${v.no}</td><td>${escapeHtml(vehicleLabel(v).replace(v.no+' - ',''))}</td><td>${isAdmin()?`<button class="bad" onclick="deleteVehicle('${v.no}')">삭제</button>`:''}</td></tr>`).join('')+'</table>'}
 function addUser(){if(!requireAdmin())return;const id=document.getElementById('newUserId').value.trim(),pw=document.getElementById('newUserPw').value,role=document.getElementById('newUserRole').value;if(!/^[가-힣a-zA-Z0-9_-]{2,20}$/.test(id))return alert('아이디는 한글/영문/숫자/_/- 조합 2~20자까지 가능합니다.');if(!pw)return alert('비밀번호를 입력하세요.');const users=get(LS.users,[]);if(users.some(u=>u.id===id))return alert('이미 있는 아이디입니다.');users.push({id,pw,role,active:true});set(LS.users,users);log('직원 추가',`${id} (${role})`);renderStaff()}function adminCount(users){return users.filter(u=>u.role==='admin'&&u.active).length}function setRole(id,role){if(!requireAdmin())return;const users=get(LS.users,[]),u=users.find(x=>x.id===id);if(!u)return;if(u.role==='admin'&&role==='staff'&&adminCount(users)<=1)return alert('최소 1명의 관리자는 유지되어야 합니다.');u.role=role;set(LS.users,users);log('권한 변경',`${id} => ${role}`);renderStaff()}function resetPw(id){if(!requireAdmin())return;const pw=prompt('새 비밀번호를 입력하세요');if(!pw)return;const users=get(LS.users,[]),u=users.find(x=>x.id===id);if(u){u.pw=pw;set(LS.users,users);log('비밀번호 재설정',id);renderStaff()}}function deleteUser(id){if(!requireAdmin())return;const users=get(LS.users,[]),u=users.find(x=>x.id===id);if(!u)return;if(u.role==='admin'&&adminCount(users)<=1)return alert('마지막 관리자는 삭제할 수 없습니다.');if(!confirm(`${id} 삭제할까요?`))return;set(LS.users,users.filter(x=>x.id!==id));log('직원 삭제',id);renderStaff()}
 function renderStaff(){const users=get(LS.users,[]);document.getElementById('staffTable').innerHTML='<table><tr><th>아이디</th><th>권한</th><th>관리</th></tr>'+users.map(u=>`<tr><td>${escapeHtml(u.id)}</td><td class="${u.role==='admin'?'role-admin':'role-staff'}">${u.role==='admin'?'관리자':'직원'}</td><td><button onclick="setRole('${escapeJs(u.id)}','admin')">관리자</button><button class="secondary" onclick="setRole('${escapeJs(u.id)}','staff')">직원</button><button class="warn" onclick="resetPw('${escapeJs(u.id)}')">비번</button><button class="bad" onclick="deleteUser('${escapeJs(u.id)}')">삭제</button></td></tr>`).join('')+'</table>'}
 function changeGatePassword(){if(!requireAdmin())return;const pw=document.getElementById('newGatePw').value;if(!pw)return alert('새 비밀번호를 입력하세요.');set(LS.gate,pw);log('공통 비밀번호 변경','');alert('변경되었습니다.')}function renderLogs(){const logs=get(LS.logs,[]);document.getElementById('logList').innerHTML=logs.length?'<table><tr><th>시간</th><th>사용자</th><th>행동</th><th>내용</th></tr>'+logs.map(l=>`<tr><td>${l.time}</td><td>${escapeHtml(l.user)}</td><td>${escapeHtml(l.action)}</td><td>${escapeHtml(l.detail||'')}</td></tr>`).join('')+'</table>':'<p class="muted">로그가 없습니다.</p>'}
