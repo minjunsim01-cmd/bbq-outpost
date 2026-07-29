@@ -330,8 +330,8 @@ function drawTemplateRows(ctx,{section,locations}){
   const isLunch=section==='lunch';
   // 공식 1080x1920 다크 카모 템플릿의 실제 행 중앙 좌표
   const centers=isLunch
-    ? [767,835,903,971,1039]
-    : [1232,1299,1366,1433,1500];
+    ? [763,831,899,967,1035]
+    : [1225,1287,1349,1411,1473];
   const textX=190;
   const maxWidth=790;
   ctx.save();
@@ -341,18 +341,29 @@ function drawTemplateRows(ctx,{section,locations}){
   ctx.textAlign='left';
   ctx.textBaseline='middle';
   rows.forEach((loc,i)=>{
-    const fs=fitText(ctx,loc,maxWidth,38,23);
+    const fs=fitText(ctx,loc,maxWidth,isLunch?36:34,22);
     ctx.font=`900 ${fs}px Arial Black, Arial, sans-serif`;
     ctx.fillText(loc,textX,centers[i]);
   });
   ctx.restore();
 }
 function coverTemplateDate(ctx){
-  // 템플릿에 남아 있는 예시 날짜(JULY 29 / WEEKDAY)를 완전히 가립니다.
-  // 붓터치 영역 안쪽만 덮어 별/장식과 겹침을 최소화합니다.
+  // 기존 날짜 글자만 가리고 붓터치의 거친 가장자리는 살립니다.
   ctx.save();
-  ctx.fillStyle='#b51f18';
-  ctx.fillRect(335,500,410,112);
+  const g=ctx.createLinearGradient(325,0,755,0);
+  g.addColorStop(0,'rgba(151,22,17,.90)');
+  g.addColorStop(.18,'rgba(181,31,24,.98)');
+  g.addColorStop(.82,'rgba(181,31,24,.98)');
+  g.addColorStop(1,'rgba(151,22,17,.90)');
+  ctx.fillStyle=g;
+  ctx.beginPath();
+  ctx.moveTo(337,512);ctx.lineTo(365,506);ctx.lineTo(397,510);ctx.lineTo(430,505);
+  ctx.lineTo(468,509);ctx.lineTo(510,505);ctx.lineTo(552,510);ctx.lineTo(596,506);
+  ctx.lineTo(637,510);ctx.lineTo(676,506);ctx.lineTo(714,511);ctx.lineTo(742,518);
+  ctx.lineTo(735,590);ctx.lineTo(704,596);ctx.lineTo(665,592);ctx.lineTo(625,597);
+  ctx.lineTo(584,592);ctx.lineTo(542,597);ctx.lineTo(500,592);ctx.lineTo(458,597);
+  ctx.lineTo(418,592);ctx.lineTo(382,596);ctx.lineTo(345,589);ctx.closePath();
+  ctx.fill();
   ctx.restore();
 }
 function renderStoryImage(showMessage=false){
@@ -374,14 +385,14 @@ function renderStoryImage(showMessage=false){
 
   coverTemplateDate(ctx);
   const monthDay=storyDateText(data);
-  const weekday=(data?.dt?.weekday||data?.dt?.week||'').toString().toUpperCase();
+  const weekday='';
   ctx.save();
   ctx.textAlign='center';
   ctx.textBaseline='middle';
   ctx.fillStyle='#fff';
   ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
-  ctx.font='900 53px Arial Black, Arial';
-  ctx.fillText(monthDay,540,548);
+  ctx.font='900 49px Arial Black, Arial';
+  ctx.fillText(monthDay,540,553);
   if(weekday){ctx.font='900 27px Arial Black, Arial';ctx.fillText(weekday,540,588)}
   ctx.restore();
 
@@ -400,7 +411,7 @@ function renderStoryImage(showMessage=false){
   if(allLunch.length>5)omitted.push(`점심 ${allLunch.length-5}곳`);
   if(allDinner.length>5)omitted.push(`저녁 ${allDinner.length-5}곳`);
   const sum=document.getElementById('storySummary');if(sum)sum.innerHTML=`<b>${escapeHtml(monthDay)}</b><div>점심 ${lunch.length}곳 · ${escapeHtml(lunchTime)}</div><div>저녁 ${dinner.length}곳 · ${escapeHtml(dinnerTime)}</div>${omitted.length?`<div class="warnText">템플릿 최대 5곳: ${omitted.join(', ')} 제외</div>`:''}`;
-  if(showMessage)alert('스토리 템플릿 위치를 수정해 현재 스케줄을 적용했습니다.');
+  if(showMessage)alert('스토리 날짜와 점심·저녁 행 위치를 다시 조정했습니다.');
 }
 function downloadStoryImage(){const canvas=document.getElementById('storyCanvas');if(!canvas)return;renderStoryImage();const data=parseSchedule();const key=data.dt?.key||new Date().toISOString().slice(0,10);const link=document.createElement('a');link.download=`BBQ_Outpost_Story_${key}.png`;link.href=canvas.toDataURL('image/png');link.click();log('스토리 이미지 저장',`${key} 인스타 스토리 PNG 저장`)}
 
