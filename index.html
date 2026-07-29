@@ -385,16 +385,21 @@ function renderStoryImage(showMessage=false){
 
   const monthDay=storyDateText(data);
   const weekday=data?.dt?['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][new Date(data.dt.year,data.dt.month-1,data.dt.day).getDay()]:'';
+
+  // 템플릿의 빈 날짜 영역은 그대로 유지하고 날짜 텍스트만 올립니다.
   ctx.save();
   ctx.textAlign='center';
   ctx.textBaseline='middle';
   ctx.fillStyle='#fff';
-  ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=4;
-  ctx.font='900 47px Arial Black, Arial';
-  ctx.fillText('★',330,548);ctx.fillText('★',750,548);
-  ctx.font='900 47px Arial Black, Arial';
-  ctx.fillText(monthDay,540,532);
-  if(weekday){ctx.font='900 22px Arial Black, Arial';ctx.fillText(weekday,540,574)}
+  ctx.shadowColor='rgba(0,0,0,.75)';
+  ctx.shadowBlur=4;
+  ctx.shadowOffsetY=2;
+  ctx.font='900 48px Arial Black, Arial';
+  ctx.fillText(monthDay,540,525);
+  if(weekday){
+    ctx.font='900 20px Arial Black, Arial';
+    ctx.fillText(weekday,540,568);
+  }
   ctx.restore();
 
   drawTemplateRows(ctx,{section:'lunch',locations:lunch});
@@ -412,7 +417,7 @@ function renderStoryImage(showMessage=false){
   if(allLunch.length>5)omitted.push(`점심 ${allLunch.length-5}곳`);
   if(allDinner.length>5)omitted.push(`저녁 ${allDinner.length-5}곳`);
   const sum=document.getElementById('storySummary');if(sum)sum.innerHTML=`<b>${escapeHtml(monthDay)}</b><div>점심 ${lunch.length}곳 · ${escapeHtml(lunchTime)}</div><div>저녁 ${dinner.length}곳 · ${escapeHtml(dinnerTime)}</div>${omitted.length?`<div class="warnText">템플릿 최대 5곳: ${omitted.join(', ')} 제외</div>`:''}`;
-  if(showMessage)alert('템플릿 날짜 붓터치를 새로 만들고 날짜와 요일을 자동 배치했습니다.');
+  if(showMessage)alert('템플릿 디자인은 그대로 유지하고 날짜와 요일 텍스트만 배치했습니다.');
 }
 function downloadStoryImage(){const canvas=document.getElementById('storyCanvas');if(!canvas)return;renderStoryImage();const data=parseSchedule();const key=data.dt?.key||new Date().toISOString().slice(0,10);const link=document.createElement('a');link.download=`BBQ_Outpost_Story_${key}.png`;link.href=canvas.toDataURL('image/png');link.click();log('스토리 이미지 저장',`${key} 인스타 스토리 PNG 저장`)}
 
