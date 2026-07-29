@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BBQ Outpost SNS Manager V6.2</title>
+  <title>BBQ Outpost SNS Manager V6.3</title>
   <style>
     :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--line:#334155;--accent:#f97316;--good:#22c55e;--bad:#ef4444;--warn:#eab308;--blue:#38bdf8}*{box-sizing:border-box}body{margin:0;font-family:Arial,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:linear-gradient(120deg,#0f172a,#1e293b);color:var(--text);padding-bottom:78px}.wrap{max-width:1180px;margin:0 auto;padding:16px}.topbar{position:sticky;top:0;z-index:20;background:rgba(15,23,42,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:-16px -16px 12px;padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.menuBtn{background:#1f2937;border:1px solid var(--line);border-radius:12px;color:white;font-size:22px;width:48px;height:48px}.card{background:rgba(17,24,39,.94);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 10px 25px rgba(0,0,0,.22)}h1,h2,h3{margin:0 0 10px}h1{font-size:20px}.muted{color:var(--muted);font-size:14px}.small{font-size:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px}textarea{min-height:230px;white-space:pre-wrap}button{background:var(--accent);color:white;border:0;border-radius:12px;padding:13px 15px;font-weight:800;cursor:pointer;margin:4px 4px 4px 0;font-size:15px}button.secondary{background:#334155}button.good{background:#16a34a}button.bad{background:#dc2626}button.warn{background:#ca8a04}button.blue{background:#0284c7}.hidden{display:none!important}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:160px;overflow:auto}.preview{background:white;color:#111827;border-radius:14px;padding:16px;min-height:120px}.preview img{max-width:120px;border-radius:10px;margin:5px}.photoRow{display:flex;flex-wrap:wrap}.photoRow img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin:4px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;margin:2px;color:#cbd5e1;font-size:12px}.ok{color:var(--good)}.err{color:var(--bad)}.warnText{color:var(--warn)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:14px}.copyBar{display:flex;flex-wrap:wrap;gap:6px}.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.drawer{position:fixed;top:0;left:0;bottom:0;width:325px;max-width:88vw;background:#020617;border-right:1px solid var(--line);z-index:60;transform:translateX(-105%);transition:.2s ease;box-shadow:10px 0 30px rgba(0,0,0,.35);padding:16px;overflow:auto}.drawer.open{transform:translateX(0)}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50}.drawerHead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.navItem{display:block;width:100%;text-align:left;background:#111827;border:1px solid var(--line);margin:8px 0}.navItem.active{background:var(--accent)}.bottomTabs{position:fixed;bottom:0;left:0;right:0;background:#020617;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:25}.bottomTabs button{border-radius:0;background:#020617;margin:0;padding:10px 4px;font-size:12px;border-right:1px solid #1e293b}.bottomTabs button.active{background:#1f2937;color:#fed7aa}.loginBox{max-width:680px;margin:auto}.rateGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rateCell{background:#020617;border:1px solid var(--line);border-radius:10px;padding:10px}.vehicleBadge{font-weight:900;color:#fde68a}.dispatchEditorRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:#020617}.dispatchEditorRow label{font-size:12px;color:#94a3b8}.dispatchSectionTitle{margin-top:14px;color:#fed7aa;font-weight:900}.notice{border-left:4px solid var(--accent);padding-left:10px;color:#fed7aa}.dangerZone{border:1px solid #7f1d1d;background:#1f0f12}.role-admin{color:#fbbf24;font-weight:bold}.role-staff{color:#93c5fd;font-weight:bold}.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.subtabs button{background:#1f2937}.subtabs button.active{background:var(--accent)}.loadCard{border:1px solid var(--line);background:#020617;border-radius:14px;padding:12px;margin:10px 0}.checkGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.checkItem{border:1px solid var(--line);border-radius:10px;padding:8px;background:#071023}.editableTable input,.editableTable select{padding:8px;font-size:14px}.swapper{cursor:pointer;background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:10px}.swapper:hover{border-color:#f97316}.miniTotal{background:#020617;border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.qtyInput{max-width:120px}
     .storyLayout{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px;align-items:start}.storyControls{position:sticky;top:84px}.storyCanvasWrap{background:#020617;border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;justify-content:center;overflow:hidden}.storyCanvasWrap canvas{display:block;width:min(100%,540px);height:auto;background:#f7f1e7;border-radius:12px}.storyList{background:#020617;border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.storyList div{padding:5px 0;border-bottom:1px solid #1e293b}.storyList div:last-child{border-bottom:0}.storyHint{border-left:4px solid #38bdf8;padding-left:10px;color:#bae6fd}.storyAction button{width:100%}
@@ -27,7 +27,7 @@
 </nav>
 <div class="wrap">
   <header class="topbar">
-    <div class="brand"><button class="menuBtn" onclick="openMenu()">☰</button><div><h1>BBQ Outpost <span class="pill">V6.2</span></h1><div class="muted small">SNS Manager · Facebook · Instagram Story</div></div></div>
+    <div class="brand"><button class="menuBtn" onclick="openMenu()">☰</button><div><h1>BBQ Outpost <span class="pill">V6.3</span></h1><div class="muted small">SNS Manager · Facebook · Instagram Story</div></div></div>
     <div class="statusText"><div id="loginStatus">로그인 안 됨</div></div>
   </header>
 
@@ -325,32 +325,41 @@ function drawLogo(ctx,x,y,size){if(storyLogo.complete&&storyLogo.naturalWidth){c
 function drawTruck(ctx,x,y,w,h,color){ctx.save();ctx.fillStyle=color;ctx.strokeStyle='#111827';ctx.lineWidth=6;roundRect(ctx,x,y+h*.18,w*.68,h*.62,18,color,'#111827',6);ctx.beginPath();ctx.moveTo(x+w*.68,y+h*.38);ctx.lineTo(x+w*.84,y+h*.38);ctx.lineTo(x+w,y+h*.62);ctx.lineTo(x+w,y+h*.8);ctx.lineTo(x+w*.68,y+h*.8);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#dbeafe';ctx.fillRect(x+w*.73,y+h*.43,w*.12,h*.18);ctx.fillStyle='#0f172a';ctx.beginPath();ctx.arc(x+w*.2,y+h*.82,h*.13,0,Math.PI*2);ctx.arc(x+w*.78,y+h*.82,h*.13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e5e7eb';ctx.beginPath();ctx.arc(x+w*.2,y+h*.82,h*.06,0,Math.PI*2);ctx.arc(x+w*.78,y+h*.82,h*.06,0,Math.PI*2);ctx.fill();drawLogo(ctx,x+w*.3,y+h*.28,h*.42);ctx.restore()}
 function drawStorySection(ctx,{y,title,time,color,icon,locations,truckColor}){const left=58,right=1022;ctx.fillStyle=color;ctx.beginPath();ctx.arc(112,y+38,48,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff';ctx.font='900 50px Arial';ctx.textAlign='center';ctx.fillText(icon,112,y+55);ctx.textAlign='left';ctx.fillStyle=color;ctx.font='900 60px Arial';ctx.fillText(title,180,y+58);roundRect(ctx,430,y+5,265,70,16,color,null);ctx.fillStyle='#fff';ctx.font='900 34px Arial';ctx.textAlign='center';ctx.fillText(time,562,y+52);drawTruck(ctx,760,y-8,220,110,truckColor);const boxY=y+95;const count=Math.max(locations.length,1);const rowH=Math.min(112,Math.max(78,560/count));const boxH=Math.max(122,rowH*count);roundRect(ctx,left,boxY,right-left,boxH,24,'rgba(255,255,255,.94)',color,4);const rows=locations.length?locations:['NO SCHEDULE'];locations=rows;locations.forEach((loc,i)=>{const ry=boxY+i*rowH;if(i>0){ctx.strokeStyle='rgba(15,23,42,.22)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(left+15,ry);ctx.lineTo(right-15,ry);ctx.stroke()}ctx.fillStyle=color;ctx.fillRect(left+165,ry,84,rowH);ctx.fillStyle='#111827';ctx.font='900 42px Arial';ctx.textAlign='center';ctx.fillText(i+1,left+207,ry+rowH*.67);ctx.fillStyle='#111827';const fs=fitText(ctx,loc,right-(left+290)-24,43,25);ctx.font=`900 ${fs}px Arial`;ctx.textAlign='left';ctx.fillText(loc,left+290,ry+rowH*.66);ctx.fillStyle='#111827';ctx.font='46px Arial';ctx.textAlign='center';ctx.fillText(i%2===0?'▰':'▣',left+94,ry+rowH*.66)});return boxY+boxH}
 function drawTemplateRows(ctx,{section,locations}){
-  const rows=(locations||[]).slice(0,5);
+  // 템플릿은 점심/저녁 각각 5줄만 제공하므로 초과 항목은 이미지에 넣지 않습니다.
+  const rows=(locations||[]).filter(Boolean).slice(0,5);
   const isLunch=section==='lunch';
-  // 공식 다크 카모 템플릿의 빈 행 중앙 좌표(1080x1920 기준)
+  // 공식 1080x1920 다크 카모 템플릿의 실제 행 중앙 좌표
   const centers=isLunch
-    ? [777,846,915,984,1053]
-    : [1320,1387,1454,1521,1588];
+    ? [767,835,903,971,1039]
+    : [1232,1299,1366,1433,1500];
   const textX=190;
-  const maxWidth=800;
+  const maxWidth=790;
   ctx.save();
   ctx.fillStyle='#ffffff';
-  ctx.shadowColor='rgba(0,0,0,.85)';
-  ctx.shadowBlur=5;
+  ctx.shadowColor='rgba(0,0,0,.9)';
+  ctx.shadowBlur=4;
   ctx.textAlign='left';
   ctx.textBaseline='middle';
   rows.forEach((loc,i)=>{
-    if(!loc||i>=centers.length)return;
-    const fs=fitText(ctx,loc,maxWidth,43,25);
-    ctx.font=`900 ${fs}px Arial, sans-serif`;
+    const fs=fitText(ctx,loc,maxWidth,38,23);
+    ctx.font=`900 ${fs}px Arial Black, Arial, sans-serif`;
     ctx.fillText(loc,textX,centers[i]);
   });
+  ctx.restore();
+}
+function coverTemplateDate(ctx){
+  // 템플릿에 남아 있는 예시 날짜(JULY 29 / WEEKDAY)를 완전히 가립니다.
+  // 붓터치 영역 안쪽만 덮어 별/장식과 겹침을 최소화합니다.
+  ctx.save();
+  ctx.fillStyle='#b51f18';
+  ctx.fillRect(335,500,410,112);
   ctx.restore();
 }
 function renderStoryImage(showMessage=false){
   const canvas=document.getElementById('storyCanvas');if(!canvas)return;
   const ctx=canvas.getContext('2d');const data=parseSchedule();
-  const lunch=storyLocations(data,'lunch');const dinner=storyLocations(data,'dinner');
+  const allLunch=storyLocations(data,'lunch');const allDinner=storyLocations(data,'dinner');
+  const lunch=allLunch.slice(0,5);const dinner=allDinner.slice(0,5);
   const lunchTime=document.getElementById('storyLunchTime')?.value||'11:00 ~ 13:00';
   const dinnerTime=document.getElementById('storyDinnerTime')?.value||'16:00 ~ 18:30';
   ctx.clearRect(0,0,1080,1920);
@@ -363,33 +372,35 @@ function renderStoryImage(showMessage=false){
     if(!storyTemplate.complete)return;
   }
 
-  // 공식 템플릿의 MONTH DD / WEEKDAY 자리만 현재 날짜로 덮어씁니다.
+  coverTemplateDate(ctx);
   const monthDay=storyDateText(data);
   const weekday=(data?.dt?.weekday||data?.dt?.week||'').toString().toUpperCase();
   ctx.save();
   ctx.textAlign='center';
   ctx.textBaseline='middle';
   ctx.fillStyle='#fff';
-  ctx.shadowColor='rgba(0,0,0,.65)';ctx.shadowBlur=4;
-  ctx.font='900 58px Arial Black, Arial';
-  ctx.fillText(monthDay,540,550);
-  if(weekday){ctx.font='900 30px Arial';ctx.fillText(weekday,540,596)}
+  ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
+  ctx.font='900 53px Arial Black, Arial';
+  ctx.fillText(monthDay,540,548);
+  if(weekday){ctx.font='900 27px Arial Black, Arial';ctx.fillText(weekday,540,588)}
   ctx.restore();
 
   drawTemplateRows(ctx,{section:'lunch',locations:lunch});
   drawTemplateRows(ctx,{section:'dinner',locations:dinner});
 
-  // 설정에서 시간이 변경된 경우 템플릿 시간 영역을 갱신합니다.
   if(lunchTime!=='11:00 ~ 13:00'){
-    ctx.save();ctx.fillStyle='#ba2019';ctx.fillRect(407,656,286,62);
-    ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 31px Arial';ctx.fillText(lunchTime,550,687);ctx.restore();
+    ctx.save();ctx.fillStyle='#ba2019';ctx.fillRect(408,655,286,62);
+    ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 30px Arial';ctx.fillText(lunchTime,551,686);ctx.restore();
   }
   if(dinnerTime!=='16:00 ~ 18:30'){
-    ctx.save();ctx.fillStyle='#fff';ctx.fillRect(403,1170,310,62);
-    ctx.fillStyle='#111';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 31px Arial';ctx.fillText(dinnerTime,558,1201);ctx.restore();
+    ctx.save();ctx.fillStyle='#fff';ctx.fillRect(404,1168,310,62);
+    ctx.fillStyle='#111';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 30px Arial';ctx.fillText(dinnerTime,559,1199);ctx.restore();
   }
-  const sum=document.getElementById('storySummary');if(sum)sum.innerHTML=`<b>${escapeHtml(monthDay)}</b><div>점심 ${lunch.length}곳 · ${escapeHtml(lunchTime)}</div><div>저녁 ${dinner.length}곳 · ${escapeHtml(dinnerTime)}</div>`;
-  if(showMessage)alert('공식 다크 카모 스토리 시안에 현재 스케줄을 적용했습니다.');
+  const omitted=[];
+  if(allLunch.length>5)omitted.push(`점심 ${allLunch.length-5}곳`);
+  if(allDinner.length>5)omitted.push(`저녁 ${allDinner.length-5}곳`);
+  const sum=document.getElementById('storySummary');if(sum)sum.innerHTML=`<b>${escapeHtml(monthDay)}</b><div>점심 ${lunch.length}곳 · ${escapeHtml(lunchTime)}</div><div>저녁 ${dinner.length}곳 · ${escapeHtml(dinnerTime)}</div>${omitted.length?`<div class="warnText">템플릿 최대 5곳: ${omitted.join(', ')} 제외</div>`:''}`;
+  if(showMessage)alert('스토리 템플릿 위치를 수정해 현재 스케줄을 적용했습니다.');
 }
 function downloadStoryImage(){const canvas=document.getElementById('storyCanvas');if(!canvas)return;renderStoryImage();const data=parseSchedule();const key=data.dt?.key||new Date().toISOString().slice(0,10);const link=document.createElement('a');link.download=`BBQ_Outpost_Story_${key}.png`;link.href=canvas.toDataURL('image/png');link.click();log('스토리 이미지 저장',`${key} 인스타 스토리 PNG 저장`)}
 
