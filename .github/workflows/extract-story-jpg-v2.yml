@@ -1,0 +1,74 @@
+name: Extract Story JPG V2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/extract-story-jpg-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover JPEG from inline data safely
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re, base64, hashlib
+
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          m=re.search(r"const STORY_TEMPLATE_B64='([^']+)';", s, re.S)
+          if not m:
+              raise SystemExit('STORY_TEMPLATE_B64 not found')
+          original=m.group(1)
+          invalid=sorted(set(ch for ch in original if ch not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\r\n\t '))
+          print('base64 chars:', len(original))
+          print('invalid non-whitespace chars:', [hex(ord(c)) for c in invalid[:20]])
+          clean=re.sub(r'\s+', '', original)
+          print('clean chars:', len(clean))
+          raw=base64.b64decode(clean, validate=True)
+          print('decoded bytes:',len(raw))
+          print('sha256:',hashlib.sha256(raw).hexdigest())
+          if not raw.startswith(b'\xff\xd8\xff') or not raw.endswith(b'\xff\xd9'):
+              raise SystemExit('decoded data is not a complete JPEG')
+          Path('story-master.jpg').write_bytes(raw)
+
+          loader=(
+            "const templateImg=new Image();let templateReady=false;\n"
+            "templateImg.onload=()=>{templateReady=true;renderStory()};\n"
+            "templateImg.onerror=(e)=>{templateReady=false;const info=document.getElementById('storyInfo');if(info)info.textContent='마스터 템플릿을 불러오지 못했어 · V7.5.4';console.error(e)};\n"
+            "templateImg.src='./story-master.jpg?v=754';\n"
+          )
+          s,n=re.subn(r"const templateImg=new Image\(\);let templateReady=false;.*?(?=function showView\()", loader+'\n', s, count=1, flags=re.S)
+          if n!=1:
+              raise SystemExit(f'loader patch failed: {n}')
+          s=s.replace('SNS Manager V7.5.3','SNS Manager V7.5.4')
+          s=s.replace('<span class=\"pill\">V7.5.3</span>','<span class=\"pill\">V7.5.4</span>')
+          p.write_text(s,encoding='utf-8')
+          PY
+          file story-master.jpg
+
+      - name: Remove temporary workflows
+        shell: bash
+        run: |
+          rm -f .github/workflows/extract-story-jpg-v2.yml
+          rm -f .github/workflows/extract-story-jpg.yml
+          rm -f .github/workflows/restore-master-template-inline.yml
+          rm -f .github/workflows/fix-template-loader-v753.yml
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix Story master image loading V7.5.4"
+          git push
