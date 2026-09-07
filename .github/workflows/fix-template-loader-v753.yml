@@ -1,0 +1,90 @@
+name: Fix Template Loader V7.5.3
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-template-loader-v753.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-loader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch Story template loader only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          m = re.search(r"const STORY_TEMPLATE_SRC='data:image/jpeg;base64,([^']+)';\s*templateImg\.src=STORY_TEMPLATE_SRC;", s, re.S)
+          if not m:
+              raise SystemExit('Inline JPEG template block not found')
+          b64 = m.group(1)
+
+          loader = f"""const STORY_TEMPLATE_B64='{b64}';
+let templateFallbackTried=false;
+templateImg.onload=()=>{{
+  templateReady=true;
+  renderStory();
+}};
+templateImg.onerror=(e)=>{{
+  if(!templateFallbackTried){{
+    templateFallbackTried=true;
+    templateImg.src='data:image/jpeg;base64,'+STORY_TEMPLATE_B64;
+    return;
+  }}
+  templateReady=false;
+  const info=document.getElementById('storyInfo');
+  if(info) info.textContent='마스터 템플릿 이미지 디코딩 실패 · V7.5.3';
+  console.error('Story template load error',e);
+}};
+try{{
+  const raw=atob(STORY_TEMPLATE_B64);
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+  const blobUrl=URL.createObjectURL(new Blob([bytes],{{type:'image/jpeg'}}));
+  templateImg.src=blobUrl;
+}}catch(err){{
+  templateFallbackTried=true;
+  templateImg.src='data:image/jpeg;base64,'+STORY_TEMPLATE_B64;
+}}"""
+
+          # Remove old onload/onerror handlers and replace source assignment block.
+          s = re.sub(
+              r"templateImg\.onload=\(\)=>\{templateReady=true;renderStory\(\)\};\s*templateImg\.onerror=\(\)=>\{templateReady=false;document\.getElementById\('storyInfo'\)\.textContent='마스터 템플릿을 불러오지 못했어\.';renderStory\(\)\};\s*const STORY_TEMPLATE_SRC='data:image/jpeg;base64,[^']+';\s*templateImg\.src=STORY_TEMPLATE_SRC;",
+              loader,
+              s,
+              count=1,
+              flags=re.S,
+          )
+
+          if 'STORY_TEMPLATE_B64' not in s:
+              raise SystemExit('Patch did not apply')
+
+          s = s.replace('SNS Manager V7.5.2', 'SNS Manager V7.5.3')
+          s = s.replace('<span class="pill">V7.5.2</span>', '<span class="pill">V7.5.3</span>')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Remove this temporary workflow
+        run: rm -f .github/workflows/fix-template-loader-v753.yml
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/fix-template-loader-v753.yml
+          git commit -m "Fix inline Story template loader V7.5.3"
+          git push
