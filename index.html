@@ -1,1 +1,102 @@
-__FROM_FILE__
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BBQ Outpost SNS Manager V7.5</title>
+<style>
+:root{--bg:#0f172a;--card:#111827;--line:#334155;--text:#e5e7eb;--muted:#94a3b8;--accent:#ef4444;--orange:#f97316;--blue:#0284c7;--green:#16a34a}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1120,#111827);color:var(--text);font-family:Arial,'Noto Sans KR',sans-serif;padding-bottom:76px}.wrap{max-width:1180px;margin:auto;padding:14px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 14px}.brand{font-size:20px;font-weight:900}.pill{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:#fecaca}.card{background:rgba(17,24,39,.96);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 12px 30px #0005}h2,h3{margin:0 0 10px}.muted{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}textarea,input,select{width:100%;background:#020617;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:11px;font-size:15px}textarea{min-height:270px;resize:vertical}button{border:0;border-radius:11px;padding:12px 14px;font-weight:800;color:white;background:var(--orange);cursor:pointer}.secondary{background:#334155}.blue{background:var(--blue)}.green{background:var(--green)}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.output{white-space:pre-wrap;background:#020617;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:180px}.view{display:none}.view.active{display:block}.storyGrid{display:grid;grid-template-columns:320px 1fr;gap:14px;align-items:start}.storyWrap{background:#020617;border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;justify-content:center}.storyWrap canvas{width:min(100%,540px);height:auto;border-radius:12px;display:block}.nav{position:fixed;left:0;right:0;bottom:0;background:#020617;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:20}.nav button{border-radius:0;background:#020617;padding:11px 4px;font-size:12px}.nav button.active{background:#1f2937;color:#fecaca}.locrow{display:grid;grid-template-columns:120px 1fr auto;gap:8px;margin:7px 0}.status{padding:8px 10px;border-radius:10px;background:#071023;color:#bae6fd;font-size:13px}.danger{background:#b91c1c}.small{font-size:12px}@media(max-width:760px){.grid,.storyGrid{grid-template-columns:1fr}.wrap{padding:10px}.card{border-radius:14px;padding:12px}.storyWrap{padding:6px}textarea{min-height:220px}.row{display:grid;grid-template-columns:1fr}.locrow{grid-template-columns:88px 1fr auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">BBQ Outpost <span class="pill">V7.5</span></div><div class="muted">SNS Manager</div></div>
+
+  <section id="home" class="view active card">
+    <h2>🏠 스케줄 입력</h2>
+    <div class="grid">
+      <div>
+        <textarea id="raw" placeholder="예:\n9/6\n점심\n찰\n71\n원스탑\n75\n\n저녁\n잭클\n61\n63\n67\n68" oninput="renderAll()"></textarea>
+        <div class="row" style="margin-top:8px"><button onclick="renderAll();showView('story')">전체 생성</button><button class="secondary" onclick="document.getElementById('raw').value='';renderAll()">초기화</button></div>
+      </div>
+      <div>
+        <h3>자동 확인</h3><div id="summary" class="status"></div>
+        <p class="muted">장소 약어는 장소 관리에서 수정할 수 있어. 스토리는 3:4 비율(1080×1440)로 생성돼.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="facebook" class="view card">
+    <h2>📝 Facebook 게시글</h2>
+    <div id="fb" class="output"></div>
+    <div class="row" style="margin-top:8px"><button onclick="copyFb()">게시글 복사</button><button class="blue" onclick="showView('story')">스토리 보기</button></div>
+  </section>
+
+  <section id="story" class="view card">
+    <h2>📱 Instagram Story</h2>
+    <div class="storyGrid">
+      <div>
+        <div class="card" style="margin:0 0 10px">
+          <label class="muted">Lunch 시간</label><input id="lunchTime" value="11:00 ~ 13:00" oninput="renderStory()">
+          <label class="muted">Dinner 시간</label><input id="dinnerTime" value="16:00 ~ 18:30" oninput="renderStory()">
+          <div class="row" style="margin-top:10px"><button class="green" onclick="downloadStory()">PNG 저장</button><button class="secondary" onclick="renderStory()">새로고침</button></div>
+        </div>
+        <div id="storyInfo" class="status"></div>
+      </div>
+      <div class="storyWrap"><canvas id="storyCanvas" width="1080" height="1440"></canvas></div>
+    </div>
+  </section>
+
+  <section id="locations" class="view card">
+    <h2>📍 장소 관리</h2>
+    <p class="muted">약어 → 스토리/Facebook에 표시할 장소명</p>
+    <div id="locationRows"></div>
+    <div class="row" style="margin-top:10px"><input id="newKey" placeholder="약어"><input id="newName" placeholder="장소명"><button onclick="addLocation()">추가</button></div>
+    <button class="secondary" style="margin-top:10px" onclick="resetLocations()">기본값 복원</button>
+  </section>
+</div>
+
+<nav class="nav">
+  <button data-v="home" class="active" onclick="showView('home')">🏠 홈</button>
+  <button data-v="facebook" onclick="showView('facebook')">📝 Facebook</button>
+  <button data-v="story" onclick="showView('story')">📱 Story</button>
+  <button data-v="locations" onclick="showView('locations')">📍 장소</button>
+</nav>
+
+<script>
+const DEFAULT_LOCATIONS={
+ '찰':'2CAB Motorpool Gate','해쿼':'304th HQ','헤쿼':'304th HQ','71':'Spartan DFAC','73':'7312 Motorpool','74':'7437 Motorpool','75':'6940 Parking Lots','슈행':'Superhangar','61':'Semaphore DFAC','63':'6323 Barracks','67':'6707 Barracks','68':'6872 Barracks','69':'6900 Barracks','잭클':'Zoeckler Gym','좨':'Zoeckler Gym','원스탑':'Maude Hall Parking Lots','USFK':'USFK parking lot','Usfk':'USFK parking lot','usfk':'USFK parking lot'
+};
+let locations=JSON.parse(localStorage.getItem('bbq_locations_v75')||'null')||{...DEFAULT_LOCATIONS};
+const templateImg=new Image();let templateReady=false;
+templateImg.onload=()=>{templateReady=true;renderStory()};
+templateImg.onerror=()=>{templateReady=false;document.getElementById('storyInfo').textContent='마스터 템플릿을 불러오지 못했어.';renderStory()};
+fetch('story-master-v2.b64',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('template');return r.text()}).then(b64=>{
+ const t=b64.trim();let mime='image/jpeg';if(t.startsWith('iVBOR'))mime='image/png';else if(t.startsWith('AAAAIGZ0eXBhdmlm'))mime='image/avif';
+ templateImg.src=`data:${mime};base64,${t}`;
+}).catch(()=>templateImg.onerror());
+
+function showView(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.v===id));if(id==='story')renderStory();if(id==='facebook')renderFacebook();if(id==='locations')renderLocations()}
+function cleanLine(s){return s.replace(/[🚚🚎🔥•·]/g,' ').replace(/^[-–—\s]+|[-–—\s]+$/g,'').trim()}
+function mapLocation(s){let v=cleanLine(s).replace(/^\d+\s*[-.)]\s*/,'').replace(/\s+\d+(?:\.\d+)?\s*$/,'').trim();return locations[v]||v}
+function parseDate(text){const now=new Date();let y=now.getFullYear(),m=null,d=null;let x=text.match(/(20\d{2})[.\/-](\d{1,2})[.\/-](\d{1,2})/);if(x){y=+x[1];m=+x[2];d=+x[3]}if(!x){x=text.match(/(\d{1,2})\s*[\/-]\s*(\d{1,2})/);if(x){m=+x[1];d=+x[2]}}if(!x){x=text.match(/(\d{1,2})\s*월\s*(\d{1,2})\s*일?/);if(x){m=+x[1];d=+x[2]}}return m&&d?new Date(y,m-1,d):now}
+function parseSchedule(){const text=document.getElementById('raw').value||'';const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);let section='';const lunch=[],dinner=[];for(const line of lines){if(/^(점심|점|lunch)/i.test(line)){section='lunch';continue}if(/^(저녁|저|dinner)/i.test(line)){section='dinner';continue}if(/^(20\d{2}[-./]|\d{1,2}\s*[\/-]\s*\d{1,2}|\d{1,2}\s*월\s*\d{1,2})/.test(line))continue;if(section==='lunch'&&lunch.length<20)lunch.push(mapLocation(line));if(section==='dinner'&&dinner.length<20)dinner.push(mapLocation(line))}return{date:parseDate(text),lunch,dinner}}
+function dateTexts(dt){const months=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];const days=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];return{date:`${months[dt.getMonth()]} ${dt.getDate()}`,day:days[dt.getDay()]}}
+function fitText(ctx,text,max,start,min){for(let s=start;s>=min;s--){ctx.font=`900 ${s}px Arial Black,Arial,sans-serif`;if(ctx.measureText(text).width<=max)return s}return min}
+const ROWS={lunch:{x:170,y:[528,581,634,687,740],max:790,start:29,min:19},dinner:{x:170,y:[887,940,993,1046,1099],max:790,start:28,min:19}};
+function drawRows(ctx,key,items){const o=ROWS[key];ctx.save();ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,.75)';ctx.shadowBlur=2;items.slice(0,5).forEach((t,i)=>{const fs=fitText(ctx,t,o.max,o.start,o.min);ctx.font=`900 ${fs}px Arial Black,Arial,sans-serif`;ctx.fillText(t,o.x,o.y[i])});ctx.restore()}
+function drawDate(ctx,dt){const t=dateTexts(dt);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.shadowColor='#000';ctx.shadowBlur=4;let fs=42;ctx.font=`900 ${fs}px Arial Black,Arial,sans-serif`;while(ctx.measureText(t.date).width>310&&fs>27){fs--;ctx.font=`900 ${fs}px Arial Black,Arial,sans-serif`}ctx.fillText(t.date,540,266);ctx.font='900 17px Arial Black,Arial,sans-serif';ctx.fillText(t.day,540,298);ctx.restore()}
+function renderStory(){const c=document.getElementById('storyCanvas');if(!c)return;const ctx=c.getContext('2d');ctx.clearRect(0,0,1080,1440);if(templateReady&&templateImg.naturalWidth){ctx.drawImage(templateImg,0,0,1080,1440)}else{ctx.fillStyle='#071008';ctx.fillRect(0,0,1080,1440);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 30px Arial';ctx.fillText('마스터 템플릿 불러오는 중...',540,720);return}const d=parseSchedule();drawDate(ctx,d.date);drawRows(ctx,'lunch',d.lunch);drawRows(ctx,'dinner',d.dinner);const li=document.getElementById('lunchTime').value.trim(),di=document.getElementById('dinnerTime').value.trim();if(li&&li!=='11:00 ~ 13:00'){ctx.fillStyle='#c71918';ctx.fillRect(422,425,232,48);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 24px Arial';ctx.fillText(li,538,449)}if(di&&di!=='16:00 ~ 18:30'){ctx.fillStyle='#fff';ctx.fillRect(438,795,236,45);ctx.fillStyle='#111';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='900 23px Arial';ctx.fillText(di,556,818)}document.getElementById('storyInfo').textContent=`Lunch ${Math.min(d.lunch.length,5)}곳 · Dinner ${Math.min(d.dinner.length,5)}곳 · @bbqoutpost_official`}
+function renderFacebook(){const d=parseSchedule(),t=dateTexts(d.date);let s=`🔥 ${t.date} SCHEDULE 🔥\n\nLunch (11:00~13:00)\n\n`;d.lunch.slice(0,5).forEach((x,i)=>s+=`${i%2?'🚎':'🚚'} ${i+1} - ${x}\n`);s+=`\nDinner (16:00~18:30)\n\n`;d.dinner.slice(0,5).forEach((x,i)=>s+=` ${i%2?'🚎':'🚚'} ${i+1} - ${x}\n`);s+='\n#CampHumphreys #USAG #Humphreys #USFK #BBQoutpost #USAGHumphreys';document.getElementById('fb').textContent=s}
+function renderAll(){const d=parseSchedule();document.getElementById('summary').textContent=`Lunch ${d.lunch.length}곳 · Dinner ${d.dinner.length}곳 · ${dateTexts(d.date).date}`;renderFacebook();renderStory()}
+function copyFb(){navigator.clipboard.writeText(document.getElementById('fb').textContent||'').then(()=>alert('복사했어.'))}
+function downloadStory(){renderStory();const d=parseSchedule(),a=document.createElement('a');a.download=`BBQ_Outpost_Story_${d.date.getFullYear()}-${String(d.date.getMonth()+1).padStart(2,'0')}-${String(d.date.getDate()).padStart(2,'0')}.png`;a.href=document.getElementById('storyCanvas').toDataURL('image/png');a.click()}
+function renderLocations(){const box=document.getElementById('locationRows');box.innerHTML='';Object.entries(locations).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v])=>{const r=document.createElement('div');r.className='locrow';r.innerHTML=`<input value="${esc(k)}" disabled><input value="${esc(v)}" data-k="${esc(k)}"><button class="danger" data-del="${esc(k)}">삭제</button>`;r.querySelector('[data-k]').onchange=e=>{locations[k]=e.target.value.trim();saveLoc()};r.querySelector('[data-del]').onclick=()=>{delete locations[k];saveLoc();renderLocations()};box.appendChild(r)})}
+function addLocation(){const k=document.getElementById('newKey').value.trim(),v=document.getElementById('newName').value.trim();if(!k||!v)return;locations[k]=v;document.getElementById('newKey').value='';document.getElementById('newName').value='';saveLoc();renderLocations();renderAll()}
+function resetLocations(){locations={...DEFAULT_LOCATIONS};saveLoc();renderLocations();renderAll()}
+function saveLoc(){localStorage.setItem('bbq_locations_v75',JSON.stringify(locations))}
+function esc(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
+renderLocations();renderAll();
+</script>
+</body>
+</html>
