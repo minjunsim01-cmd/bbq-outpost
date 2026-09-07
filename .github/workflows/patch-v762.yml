@@ -1,0 +1,77 @@
+name: Patch V7.6.2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-v762.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch index.html only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+
+          s=s.replace('SNS Manager V7.6.1','SNS Manager V7.6.2')
+          s=s.replace('<span class="pill">V7.6.1</span>','<span class="pill">V7.6.2</span>')
+
+          old="""let locations=JSON.parse(localStorage.getItem('bbq_locations_v76')||'null')||{...DEFAULT_LOCATIONS};
+const templateImg=document.getElementById('masterTemplate');let templateReady=false;
+function templateLoaded(){templateReady=true;renderStory()}
+function templateFailed(){templateReady=false;const info=document.getElementById('storyInfo');if(info)info.textContent='마스터 템플릿 로딩 실패 · V7.6'}
+if(templateImg.complete){templateImg.naturalWidth?templateLoaded():templateFailed()}else{templateImg.addEventListener('load',templateLoaded,{once:true});templateImg.addEventListener('error',templateFailed,{once:true})}"""
+          new="""let locations={...DEFAULT_LOCATIONS};
+try{const saved=localStorage.getItem('bbq_locations_v76');if(saved)locations=JSON.parse(saved)||{...DEFAULT_LOCATIONS}}catch(e){locations={...DEFAULT_LOCATIONS}}
+const templateImg=document.getElementById('masterTemplate');let templateReady=false;
+function forceRender(){requestAnimationFrame(()=>{renderAll();setTimeout(renderAll,60);setTimeout(renderAll,250)})}
+function templateLoaded(){templateReady=true;forceRender()}
+function templateFailed(){templateReady=false;const info=document.getElementById('storyInfo');if(info)info.textContent='마스터 템플릿 로딩 실패 · V7.6.2'}
+templateImg.addEventListener('load',templateLoaded);
+templateImg.addEventListener('error',templateFailed);
+if(templateImg.complete&&templateImg.naturalWidth){templateReady=true}"""
+          if old not in s:
+              raise SystemExit('template init block not found')
+          s=s.replace(old,new,1)
+
+          old_render="""function renderStory(){const c=document.getElementById('storyCanvas');if(!c)return;const ctx=c.getContext('2d');ctx.clearRect(0,0,1080,1440);if(!templateReady||!templateImg.naturalWidth){ctx.fillStyle='#071008';ctx.fillRect(0,0,1080,1440);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 30px Arial';ctx.fillText('마스터 템플릿 확인 중...',540,720);return}ctx.drawImage(templateImg,0,0,1080,1440);const d=parseSchedule();drawDate(ctx,d.date);drawRows(ctx,'lunch',d.lunch);drawRows(ctx,'dinner',d.dinner);document.getElementById('storyInfo').textContent=`정상 로드 · Lunch ${Math.min(d.lunch.length,5)}곳 · Dinner ${Math.min(d.dinner.length,5)}곳 · @bbqoutpost_official`}"""
+          new_render="""function renderStory(){const c=document.getElementById('storyCanvas');if(!c)return;const ctx=c.getContext('2d');ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,1080,1440);if(!templateReady||!templateImg.naturalWidth){ctx.fillStyle='#071008';ctx.fillRect(0,0,1080,1440);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 30px Arial';ctx.fillText('마스터 템플릿 확인 중...',540,720);ctx.restore();return}ctx.drawImage(templateImg,0,0,1080,1440);const d=parseSchedule();drawDate(ctx,d.date);drawRows(ctx,'lunch',d.lunch);drawRows(ctx,'dinner',d.dinner);ctx.restore();document.getElementById('storyInfo').textContent=`정상 로드 · Lunch ${Math.min(d.lunch.length,5)}곳 · Dinner ${Math.min(d.dinner.length,5)}곳 · @bbqoutpost_official`}"""
+          if old_render not in s:
+              raise SystemExit('renderStory block not found')
+          s=s.replace(old_render,new_render,1)
+
+          old_end="renderLocations();renderAll();\n</script>"
+          new_end="""renderLocations();renderAll();
+window.addEventListener('load',forceRender);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)forceRender()});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(forceRender).catch(()=>{});
+setTimeout(forceRender,500);
+</script>"""
+          if old_end not in s:
+              raise SystemExit('script end not found')
+          s=s.replace(old_end,new_end,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Remove temporary workflow
+        run: rm -f .github/workflows/patch-v762.yml
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/patch-v762.yml
+          git commit -m "Make Story text rendering robust on GitHub Pages V7.6.2"
+          git push
