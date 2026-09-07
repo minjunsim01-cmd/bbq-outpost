@@ -1,0 +1,92 @@
+name: Restore Master Template Inline
+
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-master-template-inline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Recover original master template and inline as PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git show 701226e5b0b3821e8a8284cbc3c336f61e091bcf:story-master-v2.b64 > /tmp/master.b64
+          base64 -d /tmp/master.b64 > /tmp/master.avif
+
+          ffmpeg -y -i /tmp/master.avif /tmp/master.png >/tmp/ffmpeg.log 2>&1
+          file /tmp/master.avif
+          file /tmp/master.png
+
+          python - <<'PY'
+          from pathlib import Path
+          import base64, re
+
+          html_path = Path('index.html')
+          html = html_path.read_text(encoding='utf-8')
+
+          png = Path('/tmp/master.png').read_bytes()
+          if not png.startswith(b'\x89PNG\r\n\x1a\n'):
+              raise SystemExit('PNG conversion failed')
+          b64 = base64.b64encode(png).decode('ascii')
+
+          loader = (
+              "const templateImg=new Image();let templateReady=false;\n"
+              "templateImg.onload=()=>{templateReady=true;renderStory()};\n"
+              "templateImg.onerror=(e)=>{templateReady=false;const info=document.getElementById('storyInfo');if(info)info.textContent='마스터 템플릿을 불러오지 못했어 · V7.5.4';console.error(e)};\n"
+              "const STORY_TEMPLATE_SRC='data:image/png;base64," + b64 + "';\n"
+              "templateImg.src=STORY_TEMPLATE_SRC;\n"
+          )
+
+          pattern = re.compile(
+              r"const templateImg=new Image\(\);let templateReady=false;.*?(?=function showView\()",
+              re.S,
+          )
+          html, count = pattern.subn(loader + "\n", html, count=1)
+          if count != 1:
+              raise SystemExit(f'loader replacement failed: {count}')
+
+          html = html.replace('SNS Manager V7.5.3', 'SNS Manager V7.5.4')
+          html = html.replace('<span class=\"pill\">V7.5.3</span>', '<span class=\"pill\">V7.5.4</span>')
+
+          html_path.write_text(html, encoding='utf-8')
+
+          # Verify the exact inline PNG can be decoded back from the generated HTML.
+          check = html_path.read_text(encoding='utf-8')
+          m = re.search(r"const STORY_TEMPLATE_SRC='data:image/png;base64,([^']+)';", check, re.S)
+          if not m:
+              raise SystemExit('inline PNG not found after patch')
+          decoded = base64.b64decode(m.group(1), validate=True)
+          if decoded != png:
+              raise SystemExit('inline PNG bytes changed')
+          print('inline png bytes:', len(decoded))
+          print('png signature ok')
+          PY
+
+      - name: Remove temporary workflows
+        shell: bash
+        run: |
+          rm -f .github/workflows/restore-master-template-inline.yml
+          rm -f .github/workflows/fix-template-loader-v753.yml
+
+      - name: Commit restored inline template
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/restore-master-template-inline.yml .github/workflows/fix-template-loader-v753.yml
+          git commit -m "Restore master Story template inline as PNG V7.5.4"
+          git push
