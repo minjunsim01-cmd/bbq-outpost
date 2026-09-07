@@ -1,0 +1,39 @@
+name: Fix Story Template
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-story-template.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Convert existing AVIF template data to JPEG data
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d story-master-v2.b64 > /tmp/story-template.avif
+          ffmpeg -y -i /tmp/story-template.avif -vf "scale=1080:1440:flags=lanczos" -q:v 2 /tmp/story-template.jpg
+          base64 -w 0 /tmp/story-template.jpg > story-master-v2.b64
+
+      - name: Commit converted template
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add story-master-v2.b64
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Convert story master template to JPEG"
+          git push
